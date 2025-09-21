@@ -12,6 +12,7 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
   - [Time and Space Complexity](#time-and-space-complexity)
   - [Recursion](#recursion)
   - [Arrays/Lists](#arrayslists)
+  - [Strings](#strings)
 - [Features](#features)
 - [Performance Analysis](#performance-analysis)
 - [Contributing](#contributing)
@@ -33,7 +34,8 @@ DSA-Python/
 ├── DSA/
 │   ├── time_space_complexity.py    # Complexity analysis and examples
 │   ├── recursion.py                # Recursion patterns and problems
-│   └── arrays_lists.py             # Array operations and algorithms
+│   ├── arrays_lists.py             # Array operations and algorithms
+│   └── strings.py                  # String operations and algorithms
 ├── README.md                       # This file
 └── .git/                          # Git repository files
 ```
@@ -69,6 +71,9 @@ python DSA/recursion.py
 
 # Run arrays/lists demonstrations
 python DSA/arrays_lists.py
+
+# Run strings demonstrations
+python DSA/strings.py
 ```
 
 ### Option 2: Import and Use in Your Code
@@ -77,6 +82,7 @@ python DSA/arrays_lists.py
 # Import specific classes
 from DSA.recursion import RecursionExamples
 from DSA.arrays_lists import ArrayOperations, ArrayAlgorithms
+from DSA.strings import StringOperations, StringAlgorithms
 from DSA.time_space_complexity import ComplexityAnalysis
 
 # Create instances and use methods
@@ -205,6 +211,64 @@ indices = algos.two_sum([2, 7, 11, 15], 9)  # [0, 1]
 max_sum = algos.maximum_subarray_sum([-2, 1, -3, 4, -1, 2, 1, -5, 4])  # 6
 ```
 
+### Strings
+
+**File**: `DSA/strings.py`
+
+**What it covers**:
+- Basic string operations (access, search, manipulation)
+- String algorithms and pattern matching
+- Palindrome problems and solutions
+- Anagram detection and grouping
+- Subsequence and substring problems
+- String transformation algorithms
+- Advanced pattern matching (KMP, regex)
+- Common string patterns and optimization techniques
+
+**Key Classes**:
+- `StringOperations`: Basic string operations and manipulations
+- `StringAlgorithms`: Advanced algorithms and classic problems
+- `StringPatterns`: Common problem-solving patterns
+
+**Featured Algorithms**:
+- Palindrome detection and longest palindromic substring
+- Anagram problems (detection, finding, grouping)
+- String search (naive and KMP algorithm)
+- Edit distance (Levenshtein distance)
+- Minimum window substring
+- Longest common subsequence
+- Pattern matching and word patterns
+- String reversal and manipulation
+
+**Featured Problems**:
+- Two Sum, Three Sum (adapted for strings)
+- Palindrome variations
+- Anagram detection and grouping
+- Edit distance calculation
+- Minimum window substring
+- Pattern matching with wildcards
+- String compression and decompression
+- Substring search optimization
+
+**Sample Usage**:
+```python
+from DSA.strings import StringOperations, StringAlgorithms
+
+ops = StringOperations()
+algos = StringAlgorithms()
+
+# Basic operations
+text = "Hello World"
+ops.reverse_string(text)  # "dlroW olleH"
+ops.find_all_occurrences(text, 'l')  # [2, 3, 9]
+
+# Classic problems
+algos.is_palindrome("A man a plan a canal Panama")  # True
+algos.are_anagrams("listen", "silent")  # True
+algos.edit_distance("kitten", "sitting")  # 3
+algos.min_window_substring("ADOBECODEBANC", "ABC")  # "BANC"
+```
+
 ## ✨ Features
 
 ### 🎯 **Educational Focus**
@@ -294,7 +358,8 @@ This project is open source and available under the [MIT License](LICENSE).
 
 1. **Start with**: `time_space_complexity.py` - Understand the fundamentals
 2. **Then move to**: `recursion.py` - Master recursive thinking
-3. **Finally**: `arrays_lists.py` - Apply concepts to solve real problems
+3. **Continue with**: `arrays_lists.py` - Apply concepts to solve real problems
+4. **Finally**: `strings.py` - Master string manipulation and pattern matching
 
 Each module builds upon previous concepts, so following this order will give you the best learning experience.
 
