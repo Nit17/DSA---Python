@@ -24,7 +24,7 @@ class RecursionExamples:
     """
     
     def __init__(self):
-        print("🔄 Recursion Examples Initialized")
+        print("Recursion Examples Initialized")
         print("=" * 50)
     
     # ==================== BASIC RECURSION EXAMPLES ====================
@@ -459,7 +459,7 @@ class RecursionPatterns:
         """
         Display common recursion patterns with examples
         """
-        print("\n📐 COMMON RECURSION PATTERNS:")
+        print("\nCOMMON RECURSION PATTERNS:")
         print("=" * 40)
         
         print("\n1. LINEAR RECURSION:")
@@ -500,14 +500,14 @@ def demonstrate_recursion():
     """
     Demonstrate various recursion examples with timing
     """
-    print("\n🔄 RECURSION DEMONSTRATIONS")
+    print("\nRECURSION DEMONSTRATIONS")
     print("=" * 50)
     
     recursion = RecursionExamples()
     patterns = RecursionPatterns()
     
     # Basic examples
-    print("\n📋 BASIC RECURSION EXAMPLES:")
+    print("\nBASIC RECURSION EXAMPLES:")
     print(f"Factorial(5): {recursion.factorial(5)}")
     print(f"Fibonacci(10): {recursion.fibonacci(10)}")
     print(f"Fibonacci Optimized(10): {recursion.fibonacci_optimized(10)}")
@@ -516,13 +516,13 @@ def demonstrate_recursion():
     print(f"GCD(48, 18): {recursion.gcd(48, 18)}")
     
     # String examples
-    print("\n📝 STRING RECURSION:")
+    print("\nSTRING RECURSION:")
     print(f"Reverse 'hello': '{recursion.reverse_string('hello')}'")
     print(f"Is 'racecar' palindrome: {recursion.is_palindrome('racecar')}")
     print(f"Count 'l' in 'hello': {recursion.count_occurrences('hello', 'l')}")
     
     # Array examples
-    print("\n🔢 ARRAY RECURSION:")
+    print("\nARRAY RECURSION:")
     arr = [3, 1, 4, 1, 5, 9, 2, 6]
     print(f"Array: {arr}")
     print(f"Sum: {recursion.array_sum(arr)}")
@@ -535,7 +535,7 @@ def demonstrate_recursion():
     print(f"Quick sort {arr}: {recursion.quick_sort(arr)}")
     
     # Complex examples
-    print("\n🌳 COMPLEX RECURSION:")
+    print("\nCOMPLEX RECURSION:")
     small_list = [1, 2, 3]
     print(f"Permutations of {small_list}:")
     perms = recursion.generate_permutations(small_list)
@@ -556,7 +556,7 @@ def demonstrate_recursion():
     patterns.show_patterns()
     
     # Performance comparison
-    print("\n⏱️ PERFORMANCE COMPARISON:")
+    print("\nPERFORMANCE COMPARISON:")
     
     # Fibonacci comparison
     n = 30  # Reduced from 35 for faster execution
@@ -579,7 +579,7 @@ def recursion_tips_and_tricks():
     """
     Tips for writing effective recursive functions
     """
-    print("\n💡 RECURSION TIPS AND TRICKS")
+    print("\nRECURSION TIPS AND TRICKS")
     print("=" * 50)
     
     tips = [
@@ -596,11 +596,11 @@ def recursion_tips_and_tricks():
     ]
     
     for tip in tips:
-        print(f"✅ {tip}")
+        print(f"- {tip}")
 
 if __name__ == "__main__":
     demonstrate_recursion()
     recursion_tips_and_tricks()
     
-    print("\n🎯 RECURSION STUDY COMPLETE!")
+    print("\nRECURSION STUDY COMPLETE!")
     print("Practice more problems to master recursion patterns!")
