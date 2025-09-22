@@ -13,6 +13,7 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
   - [Recursion](#recursion)
   - [Arrays/Lists](#arrayslists)
   - [Strings](#strings)
+  - [Linked Lists](#linked-lists)
 - [Features](#features)
 - [Performance Analysis](#performance-analysis)
 - [Contributing](#contributing)
@@ -35,7 +36,8 @@ DSA-Python/
 │   ├── time_space_complexity.py    # Complexity analysis and examples
 │   ├── recursion.py                # Recursion patterns and problems
 │   ├── arrays_lists.py             # Array operations and algorithms
-│   └── strings.py                  # String operations and algorithms
+│   ├── strings.py                  # String operations and algorithms
+│   └── linked_lists.py             # Linked list implementations
 ├── README.md                       # This file
 └── .git/                          # Git repository files
 ```
@@ -267,6 +269,74 @@ algos.is_palindrome("A man a plan a canal Panama")  # True
 algos.are_anagrams("listen", "silent")  # True
 algos.edit_distance("kitten", "sitting")  # 3
 algos.min_window_substring("ADOBECODEBANC", "ABC")  # "BANC"
+```
+
+### Linked Lists
+
+**File**: `DSA/linked_lists.py`
+
+**What it covers**:
+- Singly Linked Lists with comprehensive operations
+- Doubly Linked Lists with bidirectional traversal
+- Circular Linked Lists with special properties
+- Advanced linked list algorithms and problem-solving
+- Memory-efficient implementations
+- Classic linked list problems and patterns
+
+**Key Classes**:
+- `SinglyLinkedList`: Standard linked list implementation
+- `DoublyLinkedList`: Bidirectional linked list with head and tail pointers
+- `CircularLinkedList`: Circular implementation for special use cases
+- `LinkedListAlgorithms`: Advanced algorithms and classic problems
+
+**Featured Operations**:
+- Insertion (beginning, end, specific position)
+- Deletion (by value, by position, from ends)
+- Search and traversal operations
+- Reversal and manipulation algorithms
+- Memory-efficient bidirectional operations
+
+**Featured Algorithms**:
+- Cycle detection (Floyd's algorithm)
+- Finding cycle start position
+- Middle node detection using two pointers
+- Nth node from end calculation
+- Merging sorted linked lists
+- Reversing in groups of k
+- Adding numbers represented as linked lists
+- Duplicate removal from sorted lists
+
+**Featured Problems**:
+- Two pointer techniques for optimization
+- Cycle detection and analysis
+- List merging and splitting
+- Position-based operations
+- Memory-efficient manipulations
+- Classic interview problems
+
+**Sample Usage**:
+```python
+from DSA.linked_lists import SinglyLinkedList, DoublyLinkedList, LinkedListAlgorithms
+
+# Singly linked list
+sll = SinglyLinkedList()
+sll.append(1)
+sll.append(2)
+sll.prepend(0)
+print(sll)  # 0 -> 1 -> 2 -> None
+
+# Doubly linked list
+dll = DoublyLinkedList()
+dll.append('A')
+dll.append('B')
+dll.prepend('Z')
+print(dll.to_list())  # ['Z', 'A', 'B']
+print(dll.to_list_reverse())  # ['B', 'A', 'Z']
+
+# Advanced algorithms
+algos = LinkedListAlgorithms()
+middle = algos.find_middle(head_node)
+has_cycle = algos.detect_cycle(head_node)
 ```
 
 ## ✨ Features
