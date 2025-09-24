@@ -14,6 +14,7 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
   - [Arrays/Lists](#arrayslists)
   - [Strings](#strings)
   - [Linked Lists](#linked-lists)
+  - [Stacks](#stacks)
 - [Features](#features)
 - [Performance Analysis](#performance-analysis)
 - [Contributing](#contributing)
@@ -37,7 +38,8 @@ DSA-Python/
 │   ├── recursion.py                # Recursion patterns and problems
 │   ├── arrays_lists.py             # Array operations and algorithms
 │   ├── strings.py                  # String operations and algorithms
-│   └── linked_lists.py             # Linked list implementations
+│   ├── linked_lists.py             # Linked list implementations
+│   └── stacks.py                   # Stack implementations and algorithms
 ├── README.md                       # This file
 └── .git/                          # Git repository files
 ```
@@ -84,43 +86,14 @@ python DSA/strings.py
 # Import specific classes
 from DSA.recursion import RecursionExamples
 from DSA.arrays_lists import ArrayOperations, ArrayAlgorithms
-from DSA.strings import StringOperations, StringAlgorithms
-from DSA.time_space_complexity import ComplexityAnalysis
-
-# Create instances and use methods
-rec = RecursionExamples()
-result = rec.factorial(5)  # Returns 120
 
 ops = ArrayOperations()
-index = ops.binary_search([1, 2, 3, 4, 5], 3)  # Returns 2
-```
-
-### Option 3: Interactive Python Session
 
 ```python
-# Start Python interpreter in the repository root
-python3
-
-# Import and explore
->>> import sys
 >>> sys.path.append('DSA')
 >>> from recursion import *
->>> from arrays_lists import *
-
-# Try out functions
->>> rec = RecursionExamples()
->>> rec.fibonacci(10)
-55
-```
-
 ## 📚 Modules
 
-### Time and Space Complexity
-
-**File**: `DSA/time_space_complexity.py`
-
-**What it covers**:
-- Big O notation explanations and examples
 - Time complexity analysis for common operations
 - Space complexity concepts
 - Practical examples with performance measurements
@@ -145,6 +118,40 @@ analyzer.demonstrate_time_complexities()
 **What it covers**:
 - Basic recursion concepts and patterns
 - String and array recursion problems
+
+### Stacks
+
+**File**: `DSA/stacks.py`
+
+**What it covers**:
+- Array-based stack and linked-list-based stack implementations
+- MinStack with O(1) get_min
+- Expression parsing: infix to postfix and evaluation
+- Parentheses/Bracket validation
+- Monotonic stack patterns: next greater elements, daily temperatures
+- Classic hard problems: largest rectangle in histogram, trapping rain water
+- Path simplification
+
+**Key Classes**:
+- `ArrayStack`: Simple list-backed stack
+- `LinkedListStack`: Singly-linked stack
+- `MinStack`: Stack with O(1) minimum retrieval
+- `StackAlgorithms`: Algorithms using stacks and monotonic patterns
+
+**Featured Operations/Algorithms**:
+- push, pop, peek/top, is_empty, size, clear
+- is_valid_parentheses()
+- infix_to_postfix(), evaluate_postfix()
+- next_greater_elements(), daily_temperatures()
+- largest_rectangle_histogram(), trapping_rain_water()
+- simplify_path()
+
+**Sample Usage**:
+```python
+from DSA.stacks import ArrayStack, LinkedListStack, MinStack, StackAlgorithms
+
+# Basic stacks
+s = ArrayStack()
 - Advanced algorithms (N-Queens, Sudoku solver)
 - Optimization techniques (memoization)
 - Common recursion patterns and when to use them
@@ -154,6 +161,25 @@ analyzer.demonstrate_time_complexities()
 - `RecursionPatterns`: Common patterns and techniques
 
 **Featured Algorithms**:
+ms = MinStack()
+for v in [3, 5, 2, 2, 4]:
+  ms.push(v)
+print(ms.get_min())  # 2
+ms.pop(); ms.pop(); print(ms.get_min())  # 2
+ms.pop(); print(ms.get_min())  # 3
+
+# Algorithms
+algo = StackAlgorithms()
+print(algo.is_valid_parentheses('{[()]}()'))  # True
+post = algo.infix_to_postfix('3+(4*5-6)/(1+2)')
+print(' '.join(post))  # 3 4 5 * 6 - 1 2 + / +
+print(algo.evaluate_postfix(post))  # 7
+print(algo.next_greater_elements([2,1,2,4,3]))  # [4,2,4,-1,-1]
+print(algo.daily_temperatures([73,74,75,71,69,72,76,73]))  # [1,1,4,2,1,1,0,0]
+print(algo.largest_rectangle_histogram([2,1,5,6,2,3]))  # 10
+print(algo.trapping_rain_water([0,1,0,2,1,0,1,3,2,1,2,1]))  # 6
+print(algo.simplify_path('/a//b////c/d//././/..'))  # /a/b/c
+```
 - Factorial, Fibonacci (naive and optimized)
 - String reversal, palindrome checking
 - Array operations (sum, max, binary search)

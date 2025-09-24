@@ -12,11 +12,10 @@ def test_time_space_complexity():
     """Test time and space complexity module"""
     print("Testing Time/Space Complexity module...")
     try:
-        from time_space_complexity import ComplexityAnalysis
-        analyzer = ComplexityAnalysis()
-        # Quick test
-        result = analyzer.linear_search([1, 2, 3, 4, 5], 3)
-        assert result == 2, "Linear search failed"
+        from time_space_complexity import binary_search
+        # Quick test using available function
+        result = binary_search([1, 2, 3, 4, 5], 3)
+        assert result == 2, "Binary search failed"
         print("✓ Time/Space Complexity module working")
         return True
     except Exception as e:
@@ -86,6 +85,33 @@ def test_linked_lists():
         print(f"✗ Linked Lists module failed: {e}")
         return False
 
+def test_stacks():
+    """Test stacks module"""
+    print("Testing Stacks module...")
+    try:
+        from stacks import ArrayStack, MinStack, StackAlgorithms
+        s = ArrayStack()
+        s.push(10); s.push(20)
+        assert s.peek() == 20, "ArrayStack peek failed"
+        assert s.pop() == 20 and s.peek() == 10, "ArrayStack pop failed"
+
+        ms = MinStack()
+        for v in [3, 5, 2, 2, 4]:
+            ms.push(v)
+        assert ms.get_min() == 2, "MinStack get_min failed"
+        ms.pop(); ms.pop();
+        assert ms.get_min() == 2, "MinStack get_min after pops failed"
+        ms.pop();
+        assert ms.get_min() == 3, "MinStack get_min after more pops failed"
+
+        algo = StackAlgorithms()
+        assert algo.is_valid_parentheses("{[()]}()"), "Parentheses validation failed"
+        print("✓ Stacks module working")
+        return True
+    except Exception as e:
+        print(f"✗ Stacks module failed: {e}")
+        return False
+
 def main():
     """Run all tests"""
     print("DSA-Python Module Verification")
@@ -96,7 +122,8 @@ def main():
         test_recursion,
         test_arrays_lists,
         test_strings,
-        test_linked_lists
+        test_linked_lists,
+        test_stacks,
     ]
     
     passed = 0
