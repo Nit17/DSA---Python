@@ -15,6 +15,7 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
   - [Strings](#strings)
   - [Linked Lists](#linked-lists)
   - [Stacks](#stacks)
+  - [Queues](#queues)
 - [Features](#features)
 - [Performance Analysis](#performance-analysis)
 - [Contributing](#contributing)
@@ -39,7 +40,8 @@ DSA-Python/
 │   ├── arrays_lists.py             # Array operations and algorithms
 │   ├── strings.py                  # String operations and algorithms
 │   ├── linked_lists.py             # Linked list implementations
-│   └── stacks.py                   # Stack implementations and algorithms
+│   ├── stacks.py                   # Stack implementations and algorithms
+│   └── queues.py                   # Queue implementations and algorithms
 ├── README.md                       # This file
 └── .git/                          # Git repository files
 ```
@@ -179,6 +181,86 @@ print(algo.daily_temperatures([73,74,75,71,69,72,76,73]))  # [1,1,4,2,1,1,0,0]
 print(algo.largest_rectangle_histogram([2,1,5,6,2,3]))  # 10
 print(algo.trapping_rain_water([0,1,0,2,1,0,1,3,2,1,2,1]))  # 6
 print(algo.simplify_path('/a//b////c/d//././/..'))  # /a/b/c
+```
+
+### Queues
+
+**File**: `DSA/queues.py`
+
+**What it covers**:
+- ArrayQueue with circular indexing and capacity management
+- LinkedListQueue with unlimited capacity
+- CircularQueue with fixed-size circular buffer
+- ArrayDeque (double-ended queue) for both ends operations
+- PriorityQueue using min-heap for priority-based processing
+- BFS algorithms for graphs and trees
+- Sliding window maximum/minimum with monotonic deque
+- Task scheduling and LRU cache implementations
+
+**Key Classes**:
+- `ArrayQueue`: Efficient array-based queue with front/rear pointers
+- `LinkedListQueue`: Node-based queue with unlimited capacity
+- `CircularQueue`: Fixed-size circular buffer implementation
+- `ArrayDeque`: Double-ended queue using collections.deque
+- `PriorityQueue`: Min-heap based priority queue
+- `QueueAlgorithms`: BFS, sliding window, and scheduling algorithms
+
+**Featured Operations**:
+- enqueue, dequeue, front, rear, is_empty, is_full
+- add_front, add_rear, remove_front, remove_rear (deque)
+- enqueue with priority, peek_priority (priority queue)
+
+**Featured Algorithms**:
+- BFS tree level-order traversal
+- BFS graph traversal and shortest path
+- Sliding window maximum/minimum using monotonic deque
+- CPU task scheduling with cooldown periods
+- LRU cache simulation using deque + dictionary
+
+**Sample Usage**:
+```python
+from DSA.queues import ArrayQueue, LinkedListQueue, CircularQueue, ArrayDeque, PriorityQueue, QueueAlgorithms
+
+# Basic queues
+aq = ArrayQueue(10)
+aq.enqueue(1); aq.enqueue(2); aq.enqueue(3)
+print(f"Front: {aq.front()}, Size: {aq.size()}")  # Front: 1, Size: 3
+print(f"Dequeue: {aq.dequeue()}")  # Dequeue: 1
+
+llq = LinkedListQueue()
+llq.enqueue('A'); llq.enqueue('B')
+print(f"Rear: {llq.rear()}")  # Rear: B
+
+# Circular queue
+cq = CircularQueue(3)
+for i in [10, 20, 30]: cq.enqueue(i)
+print(f"Is Full: {cq.is_full()}")  # Is Full: True
+
+# Deque (double-ended)
+dq = ArrayDeque()
+dq.add_front(1); dq.add_rear(2); dq.add_front(0)
+print(dq)  # Deque([0, 1, 2])
+print(f"Remove rear: {dq.remove_rear()}")  # Remove rear: 2
+
+# Priority queue
+pq = PriorityQueue()
+pq.enqueue('Task C', 3); pq.enqueue('Task A', 1); pq.enqueue('Task B', 2)
+print(f"Highest priority: {pq.dequeue()}")  # Highest priority: Task A
+
+# Algorithms
+algo = QueueAlgorithms()
+graph = {'A': ['B', 'C'], 'B': ['D'], 'C': ['D'], 'D': []}
+print(algo.bfs_graph(graph, 'A'))  # ['A', 'B', 'C', 'D']
+print(algo.shortest_path_unweighted(graph, 'A', 'D'))  # ['A', 'B', 'D']
+
+# Sliding window maximum
+nums = [1, 3, -1, -3, 5, 3, 6, 7]
+print(algo.sliding_window_maximum(nums, 3))  # [3, 3, 5, 5, 6, 7]
+
+# LRU Cache simulation
+ops = [('put', 1, 1), ('put', 2, 2), ('get', 1), ('put', 3, 3), ('get', 2)]
+results = algo.lru_cache_simulation(2, ops)
+print([r for r in results if r is not None])  # [1]
 ```
 - Factorial, Fibonacci (naive and optimized)
 - String reversal, palindrome checking

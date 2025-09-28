@@ -112,6 +112,54 @@ def test_stacks():
         print(f"✗ Stacks module failed: {e}")
         return False
 
+def test_queues():
+    """Test queues module"""
+    print("Testing Queues module...")
+    try:
+        from queues import ArrayQueue, LinkedListQueue, CircularQueue, ArrayDeque, PriorityQueue, QueueAlgorithms
+        
+        # Test ArrayQueue
+        aq = ArrayQueue(5)
+        aq.enqueue(1); aq.enqueue(2); aq.enqueue(3)
+        assert aq.front() == 1 and aq.rear() == 3, "ArrayQueue front/rear failed"
+        assert aq.dequeue() == 1 and aq.front() == 2, "ArrayQueue dequeue failed"
+        
+        # Test LinkedListQueue
+        llq = LinkedListQueue()
+        llq.enqueue('A'); llq.enqueue('B')
+        assert llq.front() == 'A' and llq.rear() == 'B', "LinkedListQueue front/rear failed"
+        
+        # Test CircularQueue
+        cq = CircularQueue(3)
+        cq.enqueue(10); cq.enqueue(20); cq.enqueue(30)
+        assert cq.is_full(), "CircularQueue is_full failed"
+        assert cq.dequeue() == 10, "CircularQueue dequeue failed"
+        
+        # Test ArrayDeque
+        dq = ArrayDeque()
+        dq.add_front(2); dq.add_rear(3); dq.add_front(1)
+        assert dq.front() == 1 and dq.rear() == 3, "ArrayDeque front/rear failed"
+        
+        # Test PriorityQueue
+        pq = PriorityQueue()
+        pq.enqueue('Task C', 3); pq.enqueue('Task A', 1)
+        assert pq.dequeue() == 'Task A', "PriorityQueue dequeue failed"
+        
+        # Test algorithms
+        algo = QueueAlgorithms()
+        graph = {'A': ['B'], 'B': []}
+        assert algo.bfs_graph(graph, 'A') == ['A', 'B'], "BFS algorithm failed"
+        
+        nums = [1, 3, -1, -3, 5]
+        result = algo.sliding_window_maximum(nums, 3)
+        assert result == [3, 3, 5], "Sliding window maximum failed"
+        
+        print("✓ Queues module working")
+        return True
+    except Exception as e:
+        print(f"✗ Queues module failed: {e}")
+        return False
+
 def main():
     """Run all tests"""
     print("DSA-Python Module Verification")
@@ -124,6 +172,7 @@ def main():
         test_strings,
         test_linked_lists,
         test_stacks,
+        test_queues,
     ]
     
     passed = 0
