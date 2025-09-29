@@ -160,6 +160,35 @@ def test_queues():
         print(f"✗ Queues module failed: {e}")
         return False
 
+def test_hashing():
+    """Test hashing module"""
+    print("Testing Hashing module...")
+    try:
+        from hashing import ChainingHashTable, LinearProbingHashTable, HashingAlgorithms
+        # Test chaining table
+        cht = ChainingHashTable()
+        cht.put('apple', 1)
+        cht.put('banana', 2)
+        assert cht.get('apple') == 1, "Chaining get failed"
+        cht.put('apple', 5)
+        assert cht.get('apple') == 5, "Chaining update failed"
+        # Test linear probing
+        lp = LinearProbingHashTable()
+        lp.put(10, 'X'); lp.put(18, 'Y')  # likely collision
+        assert lp.get(10) == 'X' and lp.get(18) == 'Y', "Linear probing get failed"
+        lp.remove(10)
+        assert lp.get(10) is None, "Linear probing remove failed"
+        # Algorithms
+        alg = HashingAlgorithms()
+        assert alg.two_sum([2,7,11,15], 9) == (0,1), "Two Sum failed"
+        assert alg.longest_unique_substring('abcabcbb') == 3, "Longest unique substring failed"
+        assert alg.longest_consecutive([100,4,200,1,3,2]) == 4, "Longest consecutive sequence failed"
+        print("✓ Hashing module working")
+        return True
+    except Exception as e:
+        print(f"✗ Hashing module failed: {e}")
+        return False
+
 def main():
     """Run all tests"""
     print("DSA-Python Module Verification")
@@ -173,6 +202,7 @@ def main():
         test_linked_lists,
         test_stacks,
         test_queues,
+        test_hashing,
     ]
     
     passed = 0

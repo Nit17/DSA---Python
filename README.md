@@ -16,6 +16,7 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
   - [Linked Lists](#linked-lists)
   - [Stacks](#stacks)
   - [Queues](#queues)
+  - [Hashing / Dictionaries / Sets](#hashing--dictionaries--sets)
 - [Features](#features)
 - [Performance Analysis](#performance-analysis)
 - [Contributing](#contributing)
@@ -41,7 +42,8 @@ DSA-Python/
 │   ├── strings.py                  # String operations and algorithms
 │   ├── linked_lists.py             # Linked list implementations
 │   ├── stacks.py                   # Stack implementations and algorithms
-│   └── queues.py                   # Queue implementations and algorithms
+│   ├── queues.py                   # Queue implementations and algorithms
+│   └── hashing.py                  # Hash tables, hashing algorithms
 ├── README.md                       # This file
 └── .git/                          # Git repository files
 ```
@@ -91,26 +93,6 @@ from DSA.arrays_lists import ArrayOperations, ArrayAlgorithms
 
 ops = ArrayOperations()
 
-```python
->>> sys.path.append('DSA')
->>> from recursion import *
-## 📚 Modules
-
-- Time complexity analysis for common operations
-- Space complexity concepts
-- Practical examples with performance measurements
-- Best, average, and worst-case scenarios
-
-**Key Classes**:
-- `ComplexityAnalysis`: Demonstrates different complexity classes
-- `ComplexityComparison`: Performance benchmarking tools
-
-**Sample Usage**:
-```python
-from DSA.time_space_complexity import ComplexityAnalysis
-
-analyzer = ComplexityAnalysis()
-analyzer.demonstrate_time_complexities()
 ```
 
 ### Recursion
@@ -261,6 +243,55 @@ print(algo.sliding_window_maximum(nums, 3))  # [3, 3, 5, 5, 6, 7]
 ops = [('put', 1, 1), ('put', 2, 2), ('get', 1), ('put', 3, 3), ('get', 2)]
 results = algo.lru_cache_simulation(2, ops)
 print([r for r in results if r is not None])  # [1]
+```
+
+### Hashing / Dictionaries / Sets
+
+**File**: `DSA/hashing.py`
+
+**What it covers**:
+- Custom hash tables: Separate Chaining & Linear Probing (open addressing)
+- Core dict/set usage patterns and performance
+- Collision handling and load factor management
+- Classic hash-based interview problems
+- Frequency counting, grouping, membership optimization
+
+**Key Classes**:
+- `ChainingHashTable`: Buckets of key-value lists with rehashing
+- `LinearProbingHashTable`: Open addressing with tombstone handling
+- `HashingAlgorithms`: Two Sum, longest unique substring, etc.
+
+**Featured Algorithms**:
+- Two Sum (O(n) hash map lookup)
+- Longest substring without repeating characters (sliding window + map)
+- Longest consecutive sequence (set boundary expansion)
+- Group anagrams (frequency signature hashing)
+- Subarray sum equals K (prefix sums + hashmap)
+- First unique character detection
+- Isomorphic strings / word pattern mapping
+- Top K frequent elements (bucket technique)
+
+**Sample Usage**:
+```python
+from DSA.hashing import ChainingHashTable, LinearProbingHashTable, HashingAlgorithms
+
+# Custom hash tables
+cht = ChainingHashTable()
+cht.put('apple', 1)
+cht.put('banana', 2)
+print(cht.get('apple'))  # 1
+
+lp = LinearProbingHashTable()
+lp.put(10, 'X'); lp.put(18, 'Y')
+print(lp.get(18))  # 'Y'
+
+# Algorithms
+alg = HashingAlgorithms()
+print(alg.two_sum([2,7,11,15], 9))  # (0,1)
+print(alg.longest_unique_substring('abcabcbb'))  # 3
+print(alg.longest_consecutive([100,4,200,1,3,2]))  # 4
+print(alg.group_anagrams(["eat","tea","tan","ate","nat","bat"]))
+print(alg.subarray_sum_equals_k([1,2,3,-2,2,-2,3], 3))
 ```
 - Factorial, Fibonacci (naive and optimized)
 - String reversal, palindrome checking
