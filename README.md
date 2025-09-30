@@ -34,6 +34,31 @@ This repository contains implementations of fundamental data structures and algo
 
 > NOTE: Every major module now starts with an expanded in-file theory docstring covering: core definitions, invariants, complexity tables, trade-offs, pitfalls, implementation details, and selection guidance. Open the source to study deeper theory alongside code.
 
+## 🧭 Data Structure Selection Cheat Sheet
+
+| Goal / Need | Recommended Structure | Key Ops (Avg) | Why | Caveats |
+|-------------|-----------------------|---------------|-----|---------|
+| Fast random index access | List (array) | get/set O(1) | Contiguous memory, cache friendly | Middle insert/delete O(n) |
+| Frequent inserts/deletes at ends (both) | Deque | append/pop ends O(1) | Doubly-ended optimized | No random index O(1) |
+| Maintain sorted order with occasional search | (Not implemented) Balanced BST / `bisect` + list | search/log n (BST) | Ordered iteration, predecessor queries | Python list inserts O(n) |
+| Priority processing (min first) | MinHeap | push/pop O(log n), peek O(1) | Partial order minimal overhead | No fast arbitrary deletion |
+| Dynamic set / fast membership | Set / Hash Table | add/find/remove O(1) | Expected constant time | Worst-case O(n) collisions |
+| Key → Value mapping | Dict / Hash Table | get/put O(1) | Ubiquitous, optimized | Unordered (insertion order preserved but not sorted) |
+| Prefix queries / autocomplete | Trie | insert/search O(L) | Shared prefix compression | Higher memory overhead |
+| Range sum + point update | Fenwick Tree | update/query O(log n) | Simple, low memory | Hard for min/max ops |
+| Range sum/min + range updates (extensible) | Segment Tree (+lazy) | query/update O(log n) | Supports many associative ops | More code + memory |
+| Streaming top-k (k small) | Heap (size k) | push/pop O(log k) | Keeps k best efficiently | Not sorted internally |
+| All permutations / combinations generation | Backtracking + recursion | – | Natural tree exploration | Exponential time |
+| Detect cycles / predecessor path length | Hash set (visited) | O(1) per step | Cycle detection in graphs | Memory for visited |
+| LRU Cache | Ordered dict / deque+dict | O(1) | Quick recency tracking | Need to manage eviction logic |
+| Monotonic next greater / sliding window max | Monotonic Stack / Deque | O(n) total | Each element pushed/popped ≤ once | Logic bugs easy if conditions wrong |
+| Shortest path unweighted | Queue (BFS) | O(V+E) | Layered expansion ensures minimal edges | Requires adjacency structure |
+| Balanced frequency counts | Hash map + counters | O(1) updates | Direct tallies | Large key diversity memory cost |
+
+Legend: L = length of key/string; V = vertices; E = edges; k = retained subset size.
+
+> Selection rule of thumb: prefer the simplest structure that meets performance constraints; introduce specialized trees/tries/heaps only when profiling or requirements justify added complexity.
+
 ## 📁 Repository Structure
 
 ```
