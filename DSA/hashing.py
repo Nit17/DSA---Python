@@ -1,23 +1,81 @@
-"""
-HASHING / DICTIONARIES / SETS - Implementations and Algorithms
-==============================================================
+"""Hashing / Dictionaries / Sets – Internals & Algorithmic Patterns
+===================================================================
+Hash tables map keys to indices via a hash function enabling average O(1)
+insert, lookup, and delete. Python's dict/set are highly optimized hash tables;
+here we implement educational variants to illuminate underlying mechanics.
 
-This module covers:
-1. Custom hash table implementations (separate chaining, open addressing)
-2. Core dictionary and set usage patterns
-3. Classic hashing-based algorithm problems
-4. Collision handling strategies
-5. Performance considerations and load factor discussion
+Core Concepts
+-------------
+Hash Function h(k): deterministic mapping from key space → integer. Desirable properties:
+    - Uniform distribution (minimize collisions)
+    - Speed (fast mixing)
+    - Low collision probability for typical workloads
+    - Stability (within a process) if required; Python randomizes hash seed across processes for security.
 
-Time Complexities (Average Case):
-- Insert: O(1)
-- Search: O(1)
-- Delete: O(1)
-Worst-case can degrade to O(n) if all keys collide into one bucket (poor hash).
+Load Factor α = n / m (n = elements, m = buckets)
+    - Governs expected probe length / chain length.
+    - Typical resize threshold ≈ 0.5–0.75 balancing time vs memory.
 
-Load Factor = number_of_elements / number_of_buckets
-- Keep load factor <= 0.75 for good performance
-- Resize (rehash) when threshold exceeded
+Collision Resolution Strategies
+-------------------------------
+Separate Chaining: bucket holds list (or tree) of pairs.
+    Pros: Simple deletions; table can exceed m easily.
+    Cons: Extra pointer overhead; worst chain length may grow.
+
+Open Addressing (Probing): store entries directly in array; on collision search alternative slots.
+    Linear Probing: step = 1. Simple but suffers primary clustering.
+    Quadratic Probing: step sizes increase quadratically; reduces clustering but may complicate full table detection.
+    Double Hashing: step = h2(k); better distribution, extra hash computation cost.
+
+Resizing / Rehashing Cost
+-------------------------
+Doubling capacity and reinserting n items costs O(n), but amortized over many
+insert operations total cost stays O(1) average per insert.
+
+Clustering Effects
+------------------
+In linear probing, contiguous runs of occupied slots form clusters; new insertions extend them, increasing average probe length. Double hashing mitigates this by scattering probe sequences.
+
+Deletion in Open Addressing
+---------------------------
+Must preserve probe chains. Mark slots with a tombstone (sentinel) instead of None so lookups that should find a later key continue probing.
+
+Hash Quality & Security
+-----------------------
+Adversarial inputs (crafted strings) can force O(n) behavior by colliding into same buckets. Python seeds its hash to randomize layout between processes (hash randomization) reducing predictability for denial-of-service attacks.
+
+Universal Hashing (Theory Note)
+-------------------------------
+Pick hash function at random from a carefully designed family → expected O(1)
+even against adversarial choices of keys.
+
+Memory Trade-offs
+-----------------
+Lower load factor → more empty buckets (more memory, faster ops). Higher load factor → less memory, slower ops (longer chains / probes).
+
+When to Choose a Hash Table
+---------------------------
+- Need fast average membership / key-value mapping without ordering.
+- Keys are hashable & equality comparable with expected uniform hashes.
+- Not for range queries or ordered iteration (use tree / skip list instead).
+
+Algorithmic Patterns Using Hashing
+----------------------------------
+- Two Sum / complement lookups
+- Frequency counting & majority element
+- Deduplication & visited-state sets in graph traversal
+- Sliding window with character counts (anagrams, substring uniqueness)
+
+Worst-Case Scenarios
+--------------------
+All keys collide (poor hash or adversarial) → operations degrade to O(n).
+Balanced search trees (like red-black) guarantee O(log n) worst-case; some
+languages (Java 8+) treeify long chains to mitigate attacks.
+
+Guidance
+--------
+Aim for clear invariants: capacity power-of-two simplifies modulus via bit mask
+in some implementations (Python does similar). Regularly profile load factor if performance drifts.
 """
 from __future__ import annotations
 from typing import Any, List, Optional, Iterable, Tuple, Dict

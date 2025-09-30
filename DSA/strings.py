@@ -1,22 +1,82 @@
-"""
-STRINGS - Complete Guide with Examples and Problems
-==================================================
+"""Strings – Theory, Performance & Algorithmic Patterns
+=======================================================
+Strings model sequences of Unicode code points. Python's ``str`` is immutable:
+any apparent in-place modification actually creates a new string, affecting
+time/space characteristics of naive algorithms.
 
-Strings are sequences of characters and one of the most fundamental data types.
-In Python, strings are immutable, which affects how we manipulate them.
+1. Immutability Implications
+----------------------------
+Repeated concatenation in a loop (``s += part``) copies O(n) each time → total
+O(n^2). Prefer ``pieces.append(part)`` then ``''.join(pieces)`` for O(n).
 
-Key Properties:
-- Immutable: Cannot be changed after creation
-- Indexed: Access characters by position (0-based)
-- Iterable: Can loop through characters
-- Unicode support: Handle international characters
-- Rich built-in methods: Many string operations available
+2. Unicode & Normalization
+--------------------------
+Different code point sequences can render identical glyphs (e.g., 'é' vs 'e'+combining accent).
+For canonical comparisons use ``unicodedata.normalize('NFC', s)``. Case folding
+(``s.casefold()``) is more aggressive than ``lower()`` for Unicode-insensitive matches.
 
-Time Complexities:
-- Access: O(1) by index
-- Search: O(n) for substring
-- Concatenation: O(n) creates new string
-- Slicing: O(k) where k is slice length
+3. Indexing & Slicing
+---------------------
+Indexing is O(1) (array of Py_UCS units internally). Slicing makes a *copy* of
+slice length k → O(k) time & space. Large chained slices can degrade performance.
+
+4. Core Algorithmic Patterns
+----------------------------
+- Sliding Window: longest substring without repeats, anagrams in text.
+- Two Pointers: palindrome checks, reverse sections.
+- Hash / Frequency Counting: anagram grouping (Counter), substring permutations.
+- Prefix/HASH Rolling (Rabin–Karp): efficient multi-pattern substring searches.
+- KMP / Z-Algorithm / Boyer–Moore: linear-time pattern finding with preprocessing.
+- Tries / Suffix Trees / Suffix Arrays: multi-query indexing for large text sets.
+
+5. Substring Search Landscape
+-----------------------------
+Naive:          O(n m)
+KMP:            O(n + m) using longest proper prefix-suffix table.
+Rabin–Karp:     O(n + m) expected with good rolling hash; worst O(n m) on collisions.
+Boyer–Moore:    Often sublinear average (skips), worst O(n m). Not implemented here for brevity.
+Z-Algorithm:    Builds prefix match array in O(n + m) on concatenated pattern + text.
+
+6. Palindromes & Centers
+------------------------
+Expand-around-center: O(n^2) worst, simple.
+Manacher's Algorithm: O(n) palindromic radii computation (not implemented—more advanced).
+
+7. Frequency / Counting Tricks
+------------------------------
+Fixed small alphabet? Use list of length 26/128 instead of dict for speed.
+Arbitrary Unicode? Stick to dict/Counter.
+
+8. Memory Considerations
+------------------------
+Since strings are immutable, transformations allocate new objects. Streaming or
+generator approaches avoid building large intermediates when scanning big texts.
+
+9. Security / Robustness Notes
+------------------------------
+Beware of catastrophic backtracking in naive regex patterns (use possessive
+quantifiers or atomic groups where supported—not in Python's ``re``) and large
+regex-driven inputs. Precompile patterns with ``re.compile`` if reused.
+
+10. Choosing Data Structures
+----------------------------
+- Need prefix operations / autocomplete: use a Trie (see trees.trie).
+- Need many substring queries on static text: suffix array / suffix automaton.
+- Need simple membership / dedup of many strings: use a set.
+- Need mutable accumulating sequence of chars: use list of chars + join.
+
+11. Edge Cases & Pitfalls
+-------------------------
+- Empty string handling (often a valid palindrome).
+- Unicode normalization differences causing false negatives in equality.
+- Off-by-one start/end indices in substring extraction.
+- Misusing ``strip`` (removes any of the specified characters, not substring).
+
+12. Benchmark Tips
+------------------
+Use ``timeit`` for micro performance; measure large transformations once, not in loops.
+
+This module mixes theory with pragmatic functions to ground algorithmic patterns.
 """
 
 

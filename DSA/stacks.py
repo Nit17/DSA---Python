@@ -1,22 +1,63 @@
-"""
-STACKS - Implementations, Algorithms, and Patterns
-=================================================
+"""Stacks – LIFO Abstraction, Patterns & Advanced Use
+=====================================================
+A stack is an Abstract Data Type (ADT) enforcing Last-In-First-Out discipline.
+Operations interface (idealized):
+    push(x)  → add element to top (amortized O(1))
+    pop()    → remove and return top element (O(1))
+    peek()   → read top without removal (O(1))
+    is_empty / size → O(1)
 
-A stack is a LIFO (Last-In-First-Out) data structure that supports two primary
-operations: push (add to top) and pop (remove from top).
+Implementation Trade-offs
+-------------------------
+Array-backed (dynamic list): contiguous memory, great cache locality, direct
+indexing, occasional resize (amortized away). Pointer-based (linked) avoids
+resizing copies but adds per-node overhead and poorer locality—rarely faster in Python.
 
-Common Use Cases:
-- Expression parsing (infix -> postfix, expression evaluation)
-- Parentheses/Bracket validation
-- Backtracking (undo operations)
-- Monotonic stack patterns for next-greater, temperatures, histograms
-- Path simplification and state tracking
+Key Application Domains
+-----------------------
+1. Expression Handling: infix → postfix (Shunting Yard), evaluating RPN.
+2. Syntax & Bracket Validation: parentheses, XML/HTML tag matching.
+3. Backtracking / Undo: editors, DFS path tracking.
+4. Monotonic Stacks: maintain increasing/decreasing stack to answer next/previous
+   greater/smaller queries in O(n) (e.g., daily temperatures, histogram area).
+5. Function Call Stack: recursion conceptually uses a system-managed stack.
+6. Path Simplification: resolve '..' and '.' in filesystem paths.
 
-Time Complexities:
-- Push: O(1)
-- Pop: O(1)
-- Peek/Top: O(1)
-- Search: O(n) (need to traverse)
+Monotonic Stack Pattern (Sketch)
+--------------------------------
+for i, x in enumerate(data):
+    while stack and should_pop(stack[-1], x):
+        popped = stack.pop()
+        # compute span / interval using i and popped.index
+    stack.append(x)
+
+This ensures each element is pushed & popped at most once → O(n) total.
+
+Min Stack Strategy
+------------------
+Maintain auxiliary stack of minima; push new value onto mins only when <= current min.
+Pop from mins only when the popped value equals current min → O(1) get_min.
+
+Amortized Considerations
+------------------------
+Dynamic array push: occasional full reallocation O(n); aggregated over m pushes
+cost is O(m) total → O(1) amortized per push. Linked list push has strict O(1)
+but larger constant factor.
+
+Pitfalls & Edge Cases
+---------------------
+- Popping from empty stack → return sentinel (None) or raise underflow.
+- Forgetting to synchronize auxiliary structures (min/max stacks) on pop.
+- Using list.pop(0) mistakenly (queue behavior) → O(n) shift.
+- Recursion depth errors (stack overflow) for very deep recursion; convert to explicit stack iteration.
+
+Choosing a Stack Representation in Python
+-----------------------------------------
+- Use list for general stack usage (append/pop). Terse and optimized in C.
+- Use ``collections.deque`` if you also need O(1) pops from left (hybrid queue/stack).
+- Use custom class only when adding invariants (min tracking, capacity bounds, instrumentation).
+
+This file includes array & linked implementations, a min-tracking variant, and algorithms leveraging stack paradigms.
 """
 
 from __future__ import annotations

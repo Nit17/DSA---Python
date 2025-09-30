@@ -1,25 +1,87 @@
-"""
-Time and Space Complexity in Python (DSA Primer)
+"""Time and Space Complexity (Comprehensive Primer)
+===================================================
+This module introduces asymptotic analysis with runnable examples. Understanding
+complexity lets you compare algorithms independent of hardware, focusing on
+growth rates as input size n becomes large.
 
-Overview
-- Time complexity estimates how running time grows with input size n.
-- Space complexity estimates how extra memory (auxiliary space) grows with n.
-- We use asymptotic notation: O(upper bound), Θ(tight bound), Ω(lower bound).
-- Analyze worst, average, and best case when relevant; default to worst-case unless stated.
+1. Asymptotic Notation Recap
+----------------------------
+O(f(n))  (Big-O)    Upper bound (at most grows like f). Worst-case default.
+Ω(f(n))  (Omega)    Lower bound (grows at least like f).
+Θ(f(n))  (Theta)    Tight bound (both O and Ω simultaneously).
+o(f(n))  (little-o) Strictly smaller order than f (limit ratio → 0).
+ω(f(n))  (little-ω) Strictly larger order than f (limit ratio → ∞).
 
-Core Rules of Thumb
-- Drop constants: O(2n + 10) → O(n); O(3n^2) → O(n^2).
-- Dominant term rules: O(n^2 + n) → O(n^2).
-- Sequential steps add: O(f(n)) + O(g(n)) → O(f(n) + g(n)).
-- Nested loops multiply: O(f(n) * g(n)).
-- Divide-and-conquer recurrences often yield O(n log n).
+2. Constant Factors & Dominant Terms
+------------------------------------
+Only the highest-growth term matters for large n. Discard constants and lower
+order terms: 7n^2 + 3n + 42 ∈ Θ(n^2). Still, constant factors *matter* in
+practice—use asymptotics for scalability reasoning, not micro-optimization.
 
-Time vs. Auxiliary Space
-- Space complexity counts extra space your algorithm allocates (not the input itself),
-  including recursion stack frames, temporary arrays, maps, etc.
-- In-place algorithms attempt O(1) auxiliary space.
+3. Operation Counting Heuristics
+--------------------------------
+Sequential blocks add:  O(f) + O(g) = O(f + g)
+Nested loops multiply:  O(f * g)
+Conditional branches:   Take max complexity branch for worst-case.
+Short-circuit logic:    Worst-case may evaluate all operands.
 
-Below are canonical examples with short, runnable demos.
+4. Common Growth Classes (Ordered from Smallest to Largest)
+-----------------------------------------------------------
+O(1) < O(log n) < O(√n) < O(n) < O(n log n) < O(n^2) < O(n^3) < O(2^n) < O(n!)
+
+5. Logarithms in Algorithms
+---------------------------
+Appear when a problem size shrinks by a fixed ratio each iteration (binary
+search halves: log₂ n steps). Base of log is irrelevant in Big-O (change of base).
+
+6. Recurrences & Master Theorem (Quick Form)
+-------------------------------------------
+T(n) = a T(n/b) + f(n). Let n^{log_b a} be the 'division tree' cost per level.
+Case 1: f(n) = O(n^{log_b a - ε})   → T(n) = Θ(n^{log_b a})
+Case 2: f(n) = Θ(n^{log_b a} log^k n) → T(n) = Θ(n^{log_b a} log^{k+1} n)
+Case 3: f(n) = Ω(n^{log_b a + ε}) + regularity → T(n) = Θ(f(n))
+Examples: Merge Sort: a=2,b=2,f(n)=Θ(n) → Case 2 → Θ(n log n)
+
+7. Amortized Analysis (Informal)
+--------------------------------
+Average cost over a *sequence* of operations even if some are expensive.
+Example: Dynamic array append—most pushes O(1); occasional resize O(n); spread
+over n appends total cost O(n) → O(1) amortized per append.
+Techniques: aggregate, accounting (banker's), potential method.
+
+8. Space Complexity Nuances
+---------------------------
+Auxiliary space excludes the input representation itself. Distinguish:
+    Total footprint vs. additional working memory.
+Recursion depth counts toward auxiliary space (call stack frames). Tail-call
+optimization is *not* performed by CPython, so tail-recursive functions still
+consume O(depth) stack space.
+
+9. Memory vs Time Trade-offs
+----------------------------
+Hashing duplicates detection: O(n) time & space vs nested loops O(n^2) time & O(1) space.
+Precomputation / memoization: increase space to reduce repeated computation time.
+
+10. When A Lower Bound Matters
+------------------------------
+Comparison sorting has a Ω(n log n) lower bound: any algorithm relying solely on
+pairwise comparisons cannot beat this in the worst case (decision tree argument).
+
+11. Practical Tips & Pitfalls
+-----------------------------
+- Measure: Micro-bench to validate asymptotic expectations at your target scale.
+- Hidden constants: Hash collisions, cache effects, Python interpreter overhead.
+- Misleading worst case: Quicksort naive pivot → O(n^2); randomized or median-of-3 mitigates.
+- Early termination: Short-circuiting can yield best-case O(1) (e.g., scanning for first match).
+
+12. Python-Specific Notes
+-------------------------
+List indexing: O(1); append amortized O(1); insert/delete in middle O(n).
+Dict / set average operations: O(1); worst-case (pathological collisions) O(n).
+Slicing a list creates a copy: O(k).
+Iteration over dict/set is O(n) in number of elements, stable since Python 3.7 preserves insertion order for dict.
+
+Below: Implementations annotated with time & space. Use them as reference patterns.
 """
 from __future__ import annotations
 from typing import List, Optional, Tuple

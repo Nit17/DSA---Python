@@ -1,26 +1,71 @@
-"""
-LINKED LISTS - Complete Guide with Examples and Problems
-========================================================
+"""Linked Lists – Structure, Trade-offs & Patterns
+==================================================
+Linked lists store elements in nodes connected via references instead of
+contiguous memory. They excel at O(1) insertion/deletion *given a node reference*
+but sacrifice random access performance (O(n) traversal).
 
-Linked Lists are linear data structures where elements are stored in nodes,
-and each node contains data and a reference to the next node.
+Variants
+--------
+1. Singly Linked List: next pointer only (minimal overhead)
+2. Doubly Linked List: next + prev (bidirectional traversal, easier deletions)
+3. Circular List: tail.next points to head (cyclic iteration, queue rings)
+4. Sentinel (Dummy Head/Tail): simplify edge cases (empty list, head ops)
 
-Types of Linked Lists:
-1. Singly Linked List: Each node points to the next node
-2. Doubly Linked List: Each node has pointers to both next and previous nodes
-3. Circular Linked List: Last node points back to the first node
+Why Use Linked Lists?
+---------------------
+- Frequent insert/delete in middle without array shifting
+- Implement stacks/queues/deques (though ``collections.deque`` is optimized C)
+- Hash table separate chaining buckets
+- Maintaining sorted sequences with iterative inserts (although balanced trees
+    often outperform due to O(log n) search vs O(n) traversal)
 
-Key Properties:
-- Dynamic size: Can grow/shrink during runtime
-- No random access: Must traverse from head to reach elements
-- Efficient insertion/deletion at known positions
-- Memory efficient: Only allocates memory as needed
+Why NOT Use Them in Python?
+---------------------------
+Python's list already gives amortized O(1) append/pop end and far better cache
+locality. Linked lists add per-node Python object overhead + pointer chasing,
+often making them slower except for specialized educational or structural cases.
 
-Time Complexities:
-- Access: O(n) - must traverse from head
-- Search: O(n) - linear search required
-- Insertion: O(1) at head, O(n) at arbitrary position
-- Deletion: O(1) at head, O(n) at arbitrary position
+Complexity Summary
+------------------
+Access by index:      O(n)
+Search by value:      O(n)
+Insert at head:       O(1)
+Delete at head:       O(1)
+Insert after node*:   O(1)   (*given direct node reference)
+Delete after node*:   O(1)
+Insert at position k: O(k)
+
+Memory Model
+------------
+Each node holds data + pointer(s). Overhead can dominate for small payloads.
+Fragmentation reduces cache effectiveness vs arrays.
+
+Patterns & Techniques
+---------------------
+- Slow/Fast Pointers: cycle detection (Floyd), middle element, k-th from end.
+- Reversal: iterative pointer rewire or recursive.
+- Merge Two Sorted Lists: linear weaving without extra allocation per element.
+- Dummy (Sentinel) Node: unify logic for head manipulations.
+
+Common Pitfalls
+---------------
+- Forgetting to update size counter or tail reference leads to stale state.
+- Losing reference to remaining list when re-linking (always store next first).
+- Infinite loops in circular or incorrectly rewired lists.
+- Memory leaks (in lower-level languages) due to orphaned nodes; Python GC
+    handles reference cycles but explicit break helps timely collection.
+
+Advanced Extensions (Not Implemented Here)
+-----------------------------------------
+- Skip List: probabilistic multi-level express lanes for O(log n) expected ops.
+- Unrolled Linked List: store small arrays in each node (cache-friendly middle ground).
+- XOR Linked List: space optimization (not practical in Python, needs pointer arithmetic).
+
+Guidance
+--------
+Use for conceptual understanding, interview practice, or when node-level
+manipulation is an algorithmic requirement (LRU cache list, adjacency buckets).
+Otherwise prefer Python-native containers for performance.
 """
 
 from typing import Optional, List, Any

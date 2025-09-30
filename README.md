@@ -32,6 +32,8 @@ This repository contains implementations of fundamental data structures and algo
 - **Performance-focused**: Time and space complexity analysis
 - **Interview-ready**: Common coding interview problems and patterns
 
+> NOTE: Every major module now starts with an expanded in-file theory docstring covering: core definitions, invariants, complexity tables, trade-offs, pitfalls, implementation details, and selection guidance. Open the source to study deeper theory alongside code.
+
 ## 📁 Repository Structure
 
 ```
@@ -109,8 +111,21 @@ ops = ArrayOperations()
 **File**: `DSA/recursion.py`
 
 **What it covers**:
-- Basic recursion concepts and patterns
-- String and array recursion problems
+- Core recursion theory (base/recursive case design, stack frames)
+- Patterns: linear, binary, tail, mutual, backtracking, divide & conquer
+- Memoization vs bottom-up dynamic programming
+- Tree/graph style problems (permutations, subsets, N-Queens, Sudoku)
+- Performance comparisons (naive vs optimized Fibonacci)
+
+**Key Classes**:
+- `RecursionExamples`: Wide catalog of classic recursive problems
+- `RecursionPatterns`: Demonstrates canonical recursion archetypes
+
+**Sample Concepts**:
+- Factorial, Fibonacci (naive + memo + fast power), GCD
+- Backtracking (N-Queens, Sudoku), combinatorial generation
+
+**Tip**: View the top-level docstring for advanced sections on memoization trade-offs and recurrence modeling.
 
 ### Stacks
 
@@ -257,6 +272,40 @@ print([r for r in results if r is not None])  # [1]
 ### Hashing / Dictionaries / Sets
 
 **File**: `DSA/hashing.py`
+
+**What it covers**:
+- Separate chaining & linear probing hash tables
+- Collision strategies and load factor management
+- Algorithmic patterns: Two Sum, frequency counting, longest unique substring, longest consecutive sequence
+- Performance & security pitfalls (clustering, adversarial collisions)
+
+**Key Classes**:
+- `ChainingHashTable`: Bucketed list-of-pairs approach
+- `LinearProbingHashTable`: Open addressing with tombstones
+- `HashingAlgorithms`: Interview-style hashing problems
+
+**Theory Highlights**:
+- Hash function desiderata: uniformity, determinism, speed
+- Load factor α impact on expected chain/probe length
+- Amortized O(1) insertion via resize doubling
+- Primary clustering in linear probing; mitigation techniques
+- Hash randomization for collision attack resistance
+
+**Sample Usage**:
+```python
+from DSA.hashing import ChainingHashTable, LinearProbingHashTable, HashingAlgorithms
+
+cht = ChainingHashTable(); cht.put('apple', 1); cht.put('apple', 5)
+print(cht.get('apple'))  # 5
+
+lp = LinearProbingHashTable(); lp.put(10, 'X'); lp.put(18, 'Y')
+print(lp.get(18))  # 'Y'
+
+alg = HashingAlgorithms()
+print(alg.two_sum([2,7,11,15], 9))                # (0,1)
+print(alg.longest_unique_substring('abcabcbb'))   # 3
+print(alg.longest_consecutive([100,4,200,1,3,2])) # 4
+```
 
 **What it covers**:
 - Custom hash tables: Separate Chaining & Linear Probing (open addressing)

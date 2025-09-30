@@ -1,30 +1,76 @@
-"""
-QUEUES - Implementations, Algorithms, and Patterns
-=================================================
+"""Queues – FIFO Abstraction, Variants & Algorithmic Patterns
+==============================================================
+The queue ADT provides ordered insertion and removal under First-In-First-Out
+semantics. Core operations:
+    enqueue(x)  → add at rear
+    dequeue()   → remove from front
+    front()/peek → inspect front element
+All ideally O(1). Search by value is O(n) (sequential scan) unless augmented.
 
-A queue is a FIFO (First-In-First-Out) data structure that supports enqueue 
-(add to rear) and dequeue (remove from front) operations.
+Implemented Variants Here
+-------------------------
+1. ArrayQueue (circular buffer): fixed capacity, modular index arithmetic.
+2. LinkedListQueue: unbounded (limited by memory); head/tail pointers.
+3. CircularQueue: explicit ring buffer (demonstrates index wrap-around logic).
+4. Deque (double-ended queue): O(1) append/pop from both ends (via collections.deque).
+5. PriorityQueue: order by priority (heap-backed, smallest priority first).
 
-Queue Types Covered:
-1. ArrayQueue: Simple list-based implementation
-2. LinkedListQueue: Node-based implementation
-3. CircularQueue: Fixed-size circular buffer
-4. Deque (Double-ended Queue): Add/remove from both ends
-5. PriorityQueue: Elements ordered by priority
+Why a Circular Buffer?
+----------------------
+Avoids O(n) shifts that plague naive list.pop(0). Indices wrap using modulus;
+array slots reused after dequeue operations → stable O(1) per op.
 
-Common Use Cases:
-- Breadth-First Search (BFS) traversal
-- Process scheduling and task queues
-- Sliding window maximum/minimum problems
-- Level-order tree traversal
-- Cache implementation (LRU with deque)
-- Print job queues and buffering
+Deque vs List
+-------------
+Python list: O(1) append/pop at end, O(n) pop(0)/insert(0).
+collections.deque: O(1) append/pop at both ends (doubly-linked blocks under hood), better for queue workloads & sliding windows.
 
-Time Complexities:
-- Enqueue/Dequeue: O(1) for most implementations
-- Peek/Front: O(1)
-- Search: O(n) (need to traverse)
-- Priority operations depend on underlying heap
+Priority Queue Semantics
+------------------------
+The logical "front" is the minimal (or maximal) priority. Implementation uses a
+binary heap (array) giving O(log n) enqueue/dequeue, O(1) peek. For stable ordering
+with identical priorities store (priority, tie_breaker, value).
+
+Algorithmic Patterns Leveraging Queues
+--------------------------------------
+- BFS (graphs/trees): shortest path in unweighted graphs, level-order traversal.
+- Sliding Window: maintain candidate indices (often with deque) for max/min queries.
+- Rate Limiting / Scheduling: process tasks in arrival order.
+- Multi-producer/consumer pipelines (with thread-safe queues, not covered here).
+
+Complexity Summary (Average)
+----------------------------
+ArrayQueue enqueue/dequeue: O(1) (fails when full unless resized)
+LinkedListQueue enqueue/dequeue: O(1)
+Deque append/pop ends: O(1)
+PriorityQueue enqueue/dequeue: O(log n)
+Search (any non-indexed): O(n)
+
+Amortized Behavior
+------------------
+If you implement a dynamically resizing ring buffer, doubling capacity on full,
+the amortized enqueue becomes O(1). The provided fixed-size version returns False when full for clarity.
+
+Pitfalls & Edge Cases
+---------------------
+- Forgetting modulo wrap leads to index overflow.
+- Failing to null-out dequeued slots can prolong object lifetimes (help GC by clearing references).
+- Using list.pop(0) repeatedly → O(n^2) total for n operations.
+- Priority queue misuse: forgetting that Python's heapq is min-heap; for max-heap store negative priorities.
+
+Selection Guidance
+------------------
+- Pure FIFO with unknown growth: LinkedListQueue or deque.
+- Bounded capacity ring (e.g., fixed-size buffer): CircularQueue.
+- Need fast both-end operations: deque.
+- Need prioritized removal: PriorityQueue.
+- Need stable task ordering with periodic re-prioritization: pair heap with entry invalidation or use indexed PQ.
+
+Concurrency Note
+----------------
+For threaded producers/consumers use ``queue.Queue`` (thread-safe). The structures here are not synchronized.
+
+This module demonstrates diverse queue flavors and patterns central to breadth-first exploration and streaming analytics.
 """
 
 from __future__ import annotations
