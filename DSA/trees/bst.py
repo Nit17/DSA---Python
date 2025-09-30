@@ -1,4 +1,51 @@
-"""Full Binary Search Tree implementation (relocated under trees/)."""
+"""
+BINARY SEARCH TREE (BST) THEORY
+===============================
+
+Definition:
+A BST is a binary tree where for every node:
+        all keys in left subtree  < node.value
+        all keys in right subtree > node.value
+Duplicates are typically either disallowed or routed consistently (e.g., to the right).
+
+Core Operations:
+- Insert: Recursively (or iteratively) follow left/right based on comparison until None
+- Search: Same traversal logic as insert; O(h)
+- Delete: Three cases
+    1. Leaf node: remove directly
+    2. One child: replace node with child
+    3. Two children: replace value with inorder successor (min of right subtree) or
+         inorder predecessor (max of left subtree), then delete that successor node
+
+Traversal Properties:
+- Inorder traversal yields keys in sorted ascending order.
+- Preorder can help reconstruct tree with additional structural info (e.g., with inorder or using BST insert semantics).
+
+Complexities (h = height):
+Average (balanced): Insert/Search/Delete O(log n)
+Worst (skewed: strictly increasing inserts): O(n)
+
+Balancing (NOT implemented here):
+Self-balancing variants (AVL, Red-Black, Treap, Splay) maintain O(log n) by rotations.
+
+Validation Techniques:
+1. Inorder traversal must produce strictly increasing sequence.
+2. Recurse with value range constraints (low < node.value < high).
+
+Space Complexity:
+O(h) recursion stack; O(n) storage for n nodes.
+
+Typical Pitfalls:
+- Forget to handle duplicates (policy must be explicit)
+- Incorrectly handling delete when successor has right child
+- Mixing up returning node vs value in recursive delete
+
+Extensions:
+- Implement iterative inorder with stack
+- Add kth_smallest / kth_largest via augmented counts
+- Add range queries (collect keys in [L, R])
+- Augment nodes with subtree size or height for order statistics / balancing heuristics
+"""
 from __future__ import annotations
 from typing import Any, Optional, List
 
