@@ -17,6 +17,7 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
   - [Stacks](#stacks)
   - [Queues](#queues)
   - [Hashing / Dictionaries / Sets](#hashing--dictionaries--sets)
+  - [Trees / Heaps / Tries](#trees--heaps--tries)
 - [Features](#features)
 - [Performance Analysis](#performance-analysis)
 - [Contributing](#contributing)
@@ -43,7 +44,15 @@ DSA-Python/
 │   ├── linked_lists.py             # Linked list implementations
 │   ├── stacks.py                   # Stack implementations and algorithms
 │   ├── queues.py                   # Queue implementations and algorithms
-│   └── hashing.py                  # Hash tables, hashing algorithms
+│   ├── hashing.py                  # Hash tables, hashing algorithms
+│   ├── trees/                      # Tree & hierarchical structures package
+│   │   ├── __init__.py             # Exports aggregated tree structures
+│   │   ├── binary_tree.py          # Generic binary tree traversals & utilities
+│   │   ├── bst.py                  # Binary Search Tree implementation
+│   │   ├── heaps.py                # MinHeap / MaxHeap implementations
+│   │   ├── trie.py                 # Trie (prefix tree)
+│   │   ├── segment_tree.py         # Segment Tree (range sum)
+│   │   └── fenwick_tree.py         # Fenwick Tree / Binary Indexed Tree
 ├── README.md                       # This file
 └── .git/                          # Git repository files
 ```
@@ -293,6 +302,145 @@ print(alg.longest_consecutive([100,4,200,1,3,2]))  # 4
 print(alg.group_anagrams(["eat","tea","tan","ate","nat","bat"]))
 print(alg.subarray_sum_equals_k([1,2,3,-2,2,-2,3], 3))
 ```
+
+### Trees / Heaps / Tries
+
+This collection covers fundamental hierarchical and indexed data structures used for ordered data, priority scheduling, prefix querying, and efficient range queries.
+
+**Files**:
+- `binary_tree.py` – Generic binary tree node, traversals, structural algorithms
+- `bst.py` – Binary Search Tree with insert/search/delete/validate
+- `heaps.py` – MinHeap and MaxHeap (priority queues)
+- `trie.py` – Prefix tree for word dictionaries and autocomplete
+- `segment_tree.py` – Range sum Segment Tree (build/query/update)
+- `fenwick_tree.py` – Fenwick Tree (Binary Indexed Tree) for prefix/range sums
+
+#### Binary Tree (`binary_tree.py`)
+**What it covers**:
+- Preorder, inorder, postorder, level-order traversals
+- Height, balance check, diameter
+- Count nodes, leaves
+- Max depth, min depth
+- Path sum existence and all root→leaf paths
+- Lowest Common Ancestor (general binary tree)
+- Invert (mirror) tree
+
+**Sample Usage**:
+```python
+from DSA.binary_tree import BinaryTreeNode, preorder, inorder, level_order, height, diameter, invert_tree
+
+root = BinaryTreeNode(1,
+     BinaryTreeNode(2, BinaryTreeNode(4), BinaryTreeNode(5)),
+     BinaryTreeNode(3))
+print(preorder(root))        # [1,2,4,5,3]
+print(inorder(root))         # [4,2,5,1,3]
+print(level_order(root))     # [[1],[2,3],[4,5]]
+print(height(root))          # 3
+print(diameter(root))        # 3 (edges)
+invert_tree(root)
+print(preorder(root))        # mirrored order
+```
+
+#### Binary Search Tree (`bst.py`)
+**What it covers**:
+- Insert, search, delete (all cases)
+- Inorder traversal (sorted order)
+- Min / max value
+- Height and validation
+
+**Sample Usage**:
+```python
+from DSA.bst import BinarySearchTree
+bst = BinarySearchTree()
+for v in [8,3,10,1,6,14,4,7,13]:
+  bst.insert(v)
+print(bst.inorder())     # [1,3,4,6,7,8,10,13,14]
+print(bst.search(6))     # True
+bst.delete(3)
+print(bst.inorder())     # [1,4,6,7,8,10,13,14]
+```
+
+#### Heaps (`heaps.py`)
+**What it covers**:
+- MinHeap: push/pop/peek/heapify
+- MaxHeap: built via value negation layer over MinHeap
+- Priority queue behavior (always extract smallest/largest)
+
+**Sample Usage**:
+```python
+from DSA.heaps import MinHeap, MaxHeap
+
+mh = MinHeap([5,3,8,1])
+mh.push(0)
+print(mh.pop())      # 0
+print(mh.pop())      # 1
+
+xh = MaxHeap([5,3,8,1])
+xh.push(10)
+print(xh.pop())      # 10
+```
+
+#### Trie (`trie.py`)
+**What it covers**:
+- Insert, exact word search
+- Prefix search (starts_with)
+- Delete words (prunes nodes safely)
+- Enumerate words (optionally by prefix)
+
+**Sample Usage**:
+```python
+from DSA.trie import Trie
+tr = Trie()
+for w in ["apple","app","apex","bat"]:
+  tr.insert(w)
+print(tr.search("app"))           # True
+print(tr.starts_with("ap"))       # True
+print(tr.list_words("ap"))        # ['app','apple','apex'] (order may vary)
+tr.delete("app")
+print(tr.search("app"))           # False
+```
+
+#### Segment Tree (`segment_tree.py`)
+**What it covers**:
+- Build from array (range sums)
+- Range sum queries
+- Point updates
+- O(log n) per query/update
+
+**Sample Usage**:
+```python
+from DSA.segment_tree import SegmentTree
+data = [2,1,5,3,4]
+st = SegmentTree(data)
+print(st.range_sum(1,3))  # 1+5+3 = 9
+st.update(2,10)
+print(st.range_sum(0,4))  # 2+1+10+3+4 = 20
+```
+
+#### Fenwick Tree / Binary Indexed Tree (`fenwick_tree.py`)
+**What it covers**:
+- Point updates and prefix sums
+- Range sum via prefix differences
+- More memory-efficient than segment tree for some use-cases
+
+**Sample Usage**:
+```python
+from DSA.fenwick_tree import FenwickTree
+data = [2,1,5,3,4]
+ft = FenwickTree.build(data)
+print(ft.prefix_sum(2))     # 2+1+5 = 8
+ft.update(2,5)              # add 5 -> element becomes 10
+print(ft.range_sum(0,4))    # total updated sum
+```
+
+**Choosing Between Structures**:
+- Use a simple binary tree for traversal/path problems.
+- Use BST for ordered data with dynamic inserts (balanced tree variants like AVL/Red-Black improve worst-case).
+- Use heaps for priority scheduling (min or max extraction).
+- Use trie for fast prefix querying (autocomplete, dictionaries).
+- Use segment tree for frequent range queries + updates on static-sized arrays.
+- Use Fenwick (BIT) for prefix/range sums when operations are additive and memory efficiency matters.
+
 - Factorial, Fibonacci (naive and optimized)
 - String reversal, palindrome checking
 - Array operations (sum, max, binary search)

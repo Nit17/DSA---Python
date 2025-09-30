@@ -189,6 +189,70 @@ def test_hashing():
         print(f"✗ Hashing module failed: {e}")
         return False
 
+def test_trees():
+    """Test tree-related data structures (BST, Heaps, Trie, SegmentTree, FenwickTree)."""
+    print("Testing Trees/Heaps/Trie/Segment/Fenwick module group...")
+    try:
+        from trees.bst import BinarySearchTree
+        from trees.heaps import MinHeap, MaxHeap
+        from trees.trie import Trie
+        from trees.segment_tree import SegmentTree
+        from trees.fenwick_tree import FenwickTree
+        from trees.binary_tree import BinaryTreeNode, inorder as bt_inorder
+
+        # BST
+        bst = BinarySearchTree()
+        for v in [8,3,10,1,6,14,4,7,13]:
+            bst.insert(v)
+        assert bst.search(6) and not bst.search(99), "BST search failed"
+        before_delete = bst.inorder()
+        bst.delete(3)
+        after_delete = bst.inorder()
+        assert sorted(before_delete) == before_delete, "BST inorder not sorted"
+        assert 3 not in after_delete, "BST delete failed"
+        assert bst.is_valid(), "BST validation failed"
+
+        # MinHeap / MaxHeap
+        mh = MinHeap([5,3,8,1])
+        mh.push(0)
+        popped = [mh.pop() for _ in range(len(mh))]
+        assert popped == sorted(popped), "MinHeap order incorrect"
+        xh = MaxHeap([5,3,8,1])
+        xh.push(10)
+        max_first = xh.pop()
+        assert max_first == 10, "MaxHeap max extraction failed"
+
+        # Trie
+        tr = Trie()
+        for w in ["apple","app","apex","bat"]:
+            tr.insert(w)
+        assert tr.search("app") and not tr.search("apply"), "Trie search failed"
+        assert tr.starts_with("ap"), "Trie prefix failed"
+        tr.delete("app")
+        assert not tr.search("app") and tr.search("apple"), "Trie delete failed"
+
+        # Segment Tree
+        st = SegmentTree([2,1,5,3,4])
+        assert st.range_sum(0,4) == 15 and st.range_sum(1,3) == 9, "SegmentTree range sum failed"
+        st.update(2,10)
+        assert st.range_sum(0,4) == 20 and st.range_sum(2,2) == 10, "SegmentTree update failed"
+
+        # Fenwick Tree
+        ft = FenwickTree.build([2,1,5,3,4])
+        assert ft.prefix_sum(2) == 8 and ft.range_sum(1,3) == 9, "Fenwick prefix/range failed"
+        ft.update(2,5)
+        assert ft.range_sum(0,4) == 20, "Fenwick update failed"
+
+        # Binary Tree basic traversal
+        root = BinaryTreeNode(1, BinaryTreeNode(2), BinaryTreeNode(3))
+        assert bt_inorder(root) == [2,1,3], "Binary tree inorder failed"
+
+        print("✓ Trees/Heaps/Trie/Segment/Fenwick structures working")
+        return True
+    except Exception as e:
+        print(f"✗ Trees/Heaps/Trie/Segment/Fenwick group failed: {e}")
+        return False
+
 def main():
     """Run all tests"""
     print("DSA-Python Module Verification")
@@ -203,6 +267,7 @@ def main():
         test_stacks,
         test_queues,
         test_hashing,
+        test_trees,
     ]
     
     passed = 0
