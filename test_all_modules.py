@@ -253,6 +253,49 @@ def test_trees():
         print(f"✗ Trees/Heaps/Trie/Segment/Fenwick group failed: {e}")
         return False
 
+def test_graphs():
+    """Test graphs module"""
+    print("Testing Graphs module...")
+    try:
+        from graphs import AdjacencyListGraph, AdjacencyMatrixGraph, GraphAlgorithms
+        
+        # Test AdjacencyListGraph
+        g_list = AdjacencyListGraph()
+        g_list.add_edge(0, 1)
+        g_list.add_edge(0, 2)
+        g_list.add_edge(1, 2)
+        g_list.add_edge(1, 3)
+        assert 0 in g_list.adj_list and 1 in g_list.adj_list[0], "AdjacencyList add_edge failed"
+        
+        # Test AdjacencyMatrixGraph
+        g_matrix = AdjacencyMatrixGraph(4)
+        g_matrix.add_edge(0, 1)
+        g_matrix.add_edge(0, 2)
+        g_matrix.add_edge(1, 2)
+        g_matrix.add_edge(1, 3)
+        assert g_matrix.matrix[0][1] == 1 and g_matrix.matrix[1][0] == 1, "AdjacencyMatrix add_edge failed"
+        
+        # Test GraphAlgorithms
+        alg = GraphAlgorithms()
+        
+        # BFS
+        bfs_result = alg.bfs(g_list, 0)
+        assert set(bfs_result) == {0, 1, 2, 3}, "BFS traversal failed"
+        
+        # DFS
+        dfs_result = alg.dfs(g_list, 0)
+        assert set(dfs_result) == {0, 1, 2, 3}, "DFS traversal failed"
+        
+        # Shortest path (unweighted)
+        path = alg.shortest_path_unweighted(g_list, 0, 3)
+        assert path == [0, 1, 3], "Shortest path failed"
+        
+        print("✓ Graphs module working")
+        return True
+    except Exception as e:
+        print(f"✗ Graphs module failed: {e}")
+        return False
+
 def main():
     """Run all tests"""
     print("DSA-Python Module Verification")
@@ -268,6 +311,7 @@ def main():
         test_queues,
         test_hashing,
         test_trees,
+        test_graphs,
     ]
     
     passed = 0

@@ -18,6 +18,7 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
   - [Queues](#queues)
   - [Hashing / Dictionaries / Sets](#hashing--dictionaries--sets)
   - [Trees / Heaps / Tries](#trees--heaps--tries)
+  - [Graphs](#graphs)
 - [Features](#features)
 - [Performance Analysis](#performance-analysis)
 - [Contributing](#contributing)
@@ -514,6 +515,45 @@ print(ft.range_sum(0,4))    # total updated sum
 - Use trie for fast prefix querying (autocomplete, dictionaries).
 - Use segment tree for frequent range queries + updates on static-sized arrays.
 - Use Fenwick (BIT) for prefix/range sums when operations are additive and memory efficiency matters.
+
+### Graphs
+
+This module covers graph representations and fundamental graph algorithms for modeling relationships and networks.
+
+**File**: `DSA/graphs.py`
+
+**What it covers**:
+- Graph representations (Adjacency List, Adjacency Matrix)
+- Graph traversal algorithms (BFS, DFS)
+- Shortest path algorithms (unweighted BFS, weighted Dijkstra)
+- Graph construction and manipulation
+
+**Key Classes**:
+- `AdjacencyListGraph`: Dict-based graph for sparse graphs (O(V+E) space)
+- `AdjacencyMatrixGraph`: 2D list-based graph for dense graphs (O(V²) space)
+- `GraphAlgorithms`: BFS, DFS, shortest path, Dijkstra implementations
+
+**Sample Usage**:
+```python
+from DSA.graphs import AdjacencyListGraph, GraphAlgorithms
+
+# Create undirected graph
+g = AdjacencyListGraph()
+g.add_edge(0, 1)
+g.add_edge(0, 2)
+g.add_edge(1, 2)
+g.add_edge(1, 3)
+
+# BFS traversal
+alg = GraphAlgorithms()
+print(alg.bfs(g, 0))  # [0, 1, 2, 3]
+
+# DFS traversal
+print(alg.dfs(g, 0))  # [0, 1, 2, 3] (order may vary)
+
+# Shortest path (unweighted)
+print(alg.shortest_path(g, 0, 3))  # [0, 1, 3]
+```
 
 - Factorial, Fibonacci (naive and optimized)
 - String reversal, palindrome checking
