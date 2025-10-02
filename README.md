@@ -186,15 +186,8 @@ from DSA.stacks import ArrayStack, LinkedListStack, MinStack, StackAlgorithms
 
 # Basic stacks
 s = ArrayStack()
-- Advanced algorithms (N-Queens, Sudoku solver)
-- Optimization techniques (memoization)
-- Common recursion patterns and when to use them
+ s.push(10); s.push(20); print(s.pop())  # 20
 
-**Key Classes**:
-- `RecursionExamples`: 20+ recursion problems with solutions
-- `RecursionPatterns`: Common patterns and techniques
-
-**Featured Algorithms**:
 ms = MinStack()
 for v in [3, 5, 2, 2, 4]:
   ms.push(v)
@@ -331,51 +324,6 @@ alg = HashingAlgorithms()
 print(alg.two_sum([2,7,11,15], 9))                # (0,1)
 print(alg.longest_unique_substring('abcabcbb'))   # 3
 print(alg.longest_consecutive([100,4,200,1,3,2])) # 4
-```
-
-**What it covers**:
-- Custom hash tables: Separate Chaining & Linear Probing (open addressing)
-- Core dict/set usage patterns and performance
-- Collision handling and load factor management
-- Classic hash-based interview problems
-- Frequency counting, grouping, membership optimization
-
-**Key Classes**:
-- `ChainingHashTable`: Buckets of key-value lists with rehashing
-- `LinearProbingHashTable`: Open addressing with tombstone handling
-- `HashingAlgorithms`: Two Sum, longest unique substring, etc.
-
-**Featured Algorithms**:
-- Two Sum (O(n) hash map lookup)
-- Longest substring without repeating characters (sliding window + map)
-- Longest consecutive sequence (set boundary expansion)
-- Group anagrams (frequency signature hashing)
-- Subarray sum equals K (prefix sums + hashmap)
-- First unique character detection
-- Isomorphic strings / word pattern mapping
-- Top K frequent elements (bucket technique)
-
-**Sample Usage**:
-```python
-from DSA.hashing import ChainingHashTable, LinearProbingHashTable, HashingAlgorithms
-
-# Custom hash tables
-cht = ChainingHashTable()
-cht.put('apple', 1)
-cht.put('banana', 2)
-print(cht.get('apple'))  # 1
-
-lp = LinearProbingHashTable()
-lp.put(10, 'X'); lp.put(18, 'Y')
-print(lp.get(18))  # 'Y'
-
-# Algorithms
-alg = HashingAlgorithms()
-print(alg.two_sum([2,7,11,15], 9))  # (0,1)
-print(alg.longest_unique_substring('abcabcbb'))  # 3
-print(alg.longest_consecutive([100,4,200,1,3,2]))  # 4
-print(alg.group_anagrams(["eat","tea","tan","ate","nat","bat"]))
-print(alg.subarray_sum_equals_k([1,2,3,-2,2,-2,3], 3))
 ```
 
 ### Trees / Heaps / Tries
@@ -528,6 +476,35 @@ This module covers graph representations and fundamental graph algorithms for mo
 - Shortest path algorithms (unweighted BFS, weighted Dijkstra)
 - Graph construction and manipulation
 
+**Traversal Theory (BFS vs DFS)**:
+- **BFS (Breadth-First Search)** explores the graph level by level using a queue. Guarantees the shortest number-of-edges path in an unweighted graph. Ideal for: shortest path, level-order properties, proximity queries, multi-source diffusion (use multi-source BFS variant).
+- **DFS (Depth-First Search)** dives along a path using recursion or an explicit stack, then backtracks. Useful for: path enumeration, cycle detection, topological sorting (DAGs), articulation points (with extensions), component discovery.
+- **Iterative DFS** mirrors recursive behavior while avoiding recursion depth limits; stack ordering (reversing neighbor iteration) can approximate recursive order.
+- **Multi-Source BFS** initializes the queue with several starting nodes (distance 0) and expands outward simultaneously (common in grid “spread” problems).
+
+| Aspect | BFS | DFS |
+|--------|-----|-----|
+| Data Structure | Queue (FIFO) | Stack / Recursion (LIFO) |
+| Finds Shortest Unweighted Path | Yes | No (unless exhaustive) |
+| Memory Profile | Up to O(width) | Up to O(depth) |
+| Good For | Levels, shortest path, diffusion | Cycle/path exploration, ordering |
+| Variants | Multi-source, Bidirectional, 0-1 BFS | Iterative, Pre/In/Post order (trees) |
+| Early Exit | When target dequeued | When target first reached (may not be shortest) |
+
+**Complexities** (V = vertices, E = edges): Both BFS and DFS run in O(V + E) time on adjacency lists. On adjacency matrices they degrade to O(V²). Space is O(V) for visited + structure (queue/stack/recursion frames).
+
+**When To Choose**:
+- Need shortest steps or level partitioning → BFS
+- Need to explore structure deeply, detect cycles/order → DFS
+- Need minimal radius from multiple sources → Multi-source BFS
+- Concerned about recursion depth (large/degenerate graph) → Iterative DFS
+
+**Common Pitfalls**:
+- Forgetting to mark visited on enqueue (BFS) causes duplicates and inflated complexity.
+- Revisiting nodes in DFS without a visited set leads to infinite recursion in cyclic graphs.
+- Using BFS for weighted graphs (≠ uniform weights) gives incorrect distances (use Dijkstra / 0-1 BFS / BFS layering per weight bucket).
+- Using recursive DFS on very deep graphs can hit Python recursion limits (use iterative form).
+
 **Key Classes**:
 - `AdjacencyListGraph`: Dict-based graph for sparse graphs (O(V+E) space)
 - `AdjacencyMatrixGraph`: 2D list-based graph for dense graphs (O(V²) space)
@@ -544,15 +521,23 @@ g.add_edge(0, 2)
 g.add_edge(1, 2)
 g.add_edge(1, 3)
 
-# BFS traversal
 alg = GraphAlgorithms()
-print(alg.bfs(g, 0))  # [0, 1, 2, 3]
 
-# DFS traversal
-print(alg.dfs(g, 0))  # [0, 1, 2, 3] (order may vary)
+# BFS distances (shortest edge count from start)
+print(alg.bfs(g, 0))              # {0:0, 1:1, 2:1, 3:2}
 
-# Shortest path (unweighted)
-print(alg.shortest_path(g, 0, 3))  # [0, 1, 3]
+# DFS (recursive)
+print(alg.dfs(g, 0))              # e.g. [0,1,2,3]
+
+# DFS iterative
+print(alg.dfs_iterative(g, 0))    # Similar ordering, may vary
+
+# Shortest path (unweighted BFS reconstruction)
+from DSA.graphs import GraphAlgorithms as GA
+print(GA.shortest_path_unweighted(g, 0, 3))  # [0,1,3]
+
+# Multi-source BFS (distances from closest of sources 0 or 3)
+print(alg.multi_source_bfs(g, [0,3]))        # {0:0,3:0,1:1,2:1}
 ```
 
 - Factorial, Fibonacci (naive and optimized)

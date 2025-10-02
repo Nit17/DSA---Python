@@ -257,8 +257,9 @@ def test_graphs():
     """Test graphs module"""
     print("Testing Graphs module...")
     try:
+        # Import from graphs package (graphs/__init__.py exposes symbols)
         from graphs import AdjacencyListGraph, AdjacencyMatrixGraph, GraphAlgorithms
-        
+
         # Test AdjacencyListGraph
         g_list = AdjacencyListGraph()
         g_list.add_edge(0, 1)
