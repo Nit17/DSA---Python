@@ -258,7 +258,12 @@ def test_graphs():
     print("Testing Graphs module...")
     try:
         # Import from graphs package (graphs/__init__.py exposes symbols)
-        from graphs import AdjacencyListGraph, AdjacencyMatrixGraph, GraphAlgorithms
+        from graphs import (
+            AdjacencyListGraph, AdjacencyMatrixGraph, GraphAlgorithms,
+            WeightedAdjacencyListGraph, dijkstra, bellman_ford,
+            floyd_warshall, dijkstra_with_path, bellman_ford_with_path,
+            reconstruct_fw_path
+        )
 
         # Test AdjacencyListGraph
         g_list = AdjacencyListGraph()
@@ -290,6 +295,28 @@ def test_graphs():
         # Shortest path (unweighted)
         path = alg.shortest_path_unweighted(g_list, 0, 3)
         assert path == [0, 1, 3], "Shortest path failed"
+
+        # Weighted graph tests
+        wg = WeightedAdjacencyListGraph(directed=True)
+        for u,v,w in [
+            ('A','B',4), ('A','C',2), ('C','B',1), ('B','D',5),
+            ('C','D',8), ('C','E',10), ('D','E',2)
+        ]:
+            wg.add_edge(u,v,w)
+        dist_dij = dijkstra(wg,'A')
+        # Shortest paths: A->C (2), C->B (1) => B=3; A->C (2) + C->B (1) + B->D (5) => D=8
+        assert dist_dij['D'] == 8, "Dijkstra distance incorrect"
+        d_cost, d_path = dijkstra_with_path(wg,'A','E')
+        assert d_path and d_path[0] == 'A' and d_path[-1] == 'E', "Dijkstra path endpoints wrong"
+
+        dist_bf, neg_cycle = bellman_ford(wg,'A')
+        assert not neg_cycle and dist_bf['D'] == 8, "Bellman-Ford basic failed"
+        bf_cost, bf_path, neg2 = bellman_ford_with_path(wg,'A','E')
+        assert not neg2 and bf_path and bf_path[0] == 'A' and bf_path[-1] == 'E', "Bellman-Ford path failed"
+
+        all_dist, nxt = floyd_warshall(wg)
+        fw_path = reconstruct_fw_path(nxt,'A','E')
+        assert all_dist['A']['D'] == 8 and fw_path and fw_path[0] == 'A' and fw_path[-1] == 'E', "Floyd-Warshall failed"
         
         print("✓ Graphs module working")
         return True

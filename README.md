@@ -540,6 +540,47 @@ print(GA.shortest_path_unweighted(g, 0, 3))  # [0,1,3]
 print(alg.multi_source_bfs(g, [0,3]))        # {0:0,3:0,1:1,2:1}
 ```
 
+#### Shortest Path Algorithms (Weighted Graphs)
+
+| Algorithm | Handles Negative Weights | Detects Negative Cycle | Problem Scope | Time Complexity | Space |
+|-----------|--------------------------|-------------------------|---------------|-----------------|-------|
+| BFS (unweighted) | No (assumes weight=1) | No | Single-source (unweighted) | O(V+E) | O(V) |
+| Dijkstra (heap) | No (requires w ≥ 0) | No | Single-source | O((V+E) log V) | O(V) |
+| Bellman-Ford | Yes | Yes | Single-source | O(V * E) | O(V) |
+| Floyd-Warshall | Yes | Indirect (if dist[i][i] < 0) | All-pairs | O(V³) | O(V²) |
+
+Use Dijkstra for large sparse graphs with non-negative weights. Use Bellman-Ford when negative edges may exist or cycle detection is required. Use Floyd-Warshall for dense graphs or when you need all pairs shortest paths simultaneously.
+
+**Weighted Graph Sample**:
+```python
+from DSA.graphs import (
+  WeightedAdjacencyListGraph,
+  dijkstra, dijkstra_with_path,
+  bellman_ford, bellman_ford_with_path,
+  floyd_warshall, reconstruct_fw_path
+)
+
+wg = WeightedAdjacencyListGraph(directed=True)
+for u,v,w in [
+  ('A','B',4), ('A','C',2), ('C','B',1), ('B','D',5),
+  ('C','D',8), ('C','E',10), ('D','E',2), ('E','D',-2)
+]:
+  wg.add_edge(u,v,w)
+
+# Dijkstra (non-negative guarantee needed; here edges are >= -2 so negative edge breaks correctness for pure Dijkstra, provided for illustration only)
+print(dijkstra(wg,'A'))
+print(dijkstra_with_path(wg,'A','E'))
+
+# Bellman-Ford (handles negative edge D<-E weight -2)
+dist, neg_cycle = bellman_ford(wg,'A')
+print(dist, neg_cycle)
+print(bellman_ford_with_path(wg,'A','E'))
+
+# All pairs
+all_dist, nxt = floyd_warshall(wg)
+print(all_dist['A']['E'], reconstruct_fw_path(nxt,'A','E'))
+```
+
 - Factorial, Fibonacci (naive and optimized)
 - String reversal, palindrome checking
 - Array operations (sum, max, binary search)
