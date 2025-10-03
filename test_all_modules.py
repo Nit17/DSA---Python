@@ -262,7 +262,8 @@ def test_graphs():
             AdjacencyListGraph, AdjacencyMatrixGraph, GraphAlgorithms,
             WeightedAdjacencyListGraph, dijkstra, bellman_ford,
             floyd_warshall, dijkstra_with_path, bellman_ford_with_path,
-            reconstruct_fw_path
+            reconstruct_fw_path, bellman_ford_with_cycle, johnson_all_pairs,
+            dag_shortest_paths, topological_order
         )
 
         # Test AdjacencyListGraph
@@ -317,6 +318,24 @@ def test_graphs():
         all_dist, nxt = floyd_warshall(wg)
         fw_path = reconstruct_fw_path(nxt,'A','E')
         assert all_dist['A']['D'] == 8 and fw_path and fw_path[0] == 'A' and fw_path[-1] == 'E', "Floyd-Warshall failed"
+
+        # Johnson all-pairs (no negative edges here) should match Floyd for checked nodes
+        j_dist, j_cycle = johnson_all_pairs(wg)
+        assert j_cycle is None and j_dist['A']['D'] == 8, "Johnson all-pairs failed"
+
+        # Add negative edge (still no negative cycle) and test Bellman-Ford cycle extraction returns empty
+        wg.add_edge('E','F',1)
+        wg.add_edge('F','D',-1)  # adjust distances
+        dist_cycle_check, cycle_nodes = bellman_ford_with_cycle(wg,'A')
+        assert cycle_nodes == [] , "Unexpected negative cycle detected"
+
+        # DAG shortest paths test on acyclic graph
+        dag = WeightedAdjacencyListGraph(directed=True)
+        for u,v,w in [('S','A',1),('S','B',4),('A','B',2),('A','C',6),('B','C',3)]:
+            dag.add_edge(u,v,w)
+        order = topological_order(dag)
+        dag_dist = dag_shortest_paths(dag,'S',order)
+        assert dag_dist['C'] == 6, "DAG shortest path incorrect"
         
         print("✓ Graphs module working")
         return True

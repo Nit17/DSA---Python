@@ -4,15 +4,18 @@
 This module provides weighted graph support plus classic shortest path algorithms:
 
 Algorithms Included:
-- Dijkstra (non-negative weights)      O((V+E) log V) with heap
-- Bellman-Ford (handles negative)      O(V * E)
-- Floyd-Warshall (all-pairs)           O(V^3)
+- Dijkstra (non-negative weights)         O((V+E) log V) with heap
+- Bellman-Ford (handles negative)         O(V * E)
+- Floyd-Warshall (all-pairs)              O(V^3)
+- Johnson (sparse all-pairs, reweight)    O(V * E log V)
+- DAG Shortest Path (topological order)   O(V + E)
 
 Selection Guide:
 - Need single-source, non-negative weights -> Dijkstra
 - Need to detect negative cycle or handle negative edges -> Bellman-Ford
 - Need distances between all pairs (small/medium dense graph) -> Floyd-Warshall
-- Need dynamic incremental updates -> Re-run appropriate algorithm (or use more advanced dynamic algorithms, not covered here)
+- Need all-pairs on sparse graph (may contain negative, no negative cycles) -> Johnson
+- Single-source on DAG (incl. negative edges, no cycles) -> DAG shortest path
 
 Conventions:
 - Vertices assumed hashable (default int)
@@ -26,7 +29,7 @@ Limitations:
 
 """
 from __future__ import annotations
-from typing import Dict, List, Tuple, Optional, Any
+from typing import Dict, List, Tuple, Optional, Any, Iterable
 import heapq
 
 class WeightedAdjacencyListGraph:
@@ -53,6 +56,10 @@ class WeightedAdjacencyListGraph:
         for u, nbrs in self.adj.items():
             for v, w in nbrs:
                 yield (u, v, w)
+
+    # Convenience for DAG algorithms (out-neighbors)
+    def neighbors(self, u: Any) -> Iterable[Tuple[Any, float]]:
+        return self.adj.get(u, [])
 
 # ---------------- Dijkstra ----------------
 
@@ -121,6 +128,48 @@ def bellman_ford(graph: WeightedAdjacencyListGraph, source: Any) -> Tuple[Dict[A
             has_neg_cycle = True
             break
     return dist, has_neg_cycle
+
+# ---------------- Bellman-Ford with Negative Cycle Extraction ----------------
+
+def bellman_ford_with_cycle(graph: WeightedAdjacencyListGraph, source: Any) -> Tuple[Dict[Any, float], List[Any]]:
+    """Bellman-Ford that returns distances and a representative negative cycle (list of vertices) if one exists.
+
+    Cycle extraction approach:
+    - Track parent on relaxation.
+    - After V-1 iterations, perform one more pass; if an edge can still relax, follow parent pointers V times from the updated vertex to guarantee landing inside a cycle, then walk until repeat to extract cycle.
+    """
+    dist: Dict[Any, float] = {v: float('inf') for v in graph.vertices()}
+    parent: Dict[Any, Optional[Any]] = {v: None for v in graph.vertices()}
+    dist[source] = 0.0
+    verts = graph.vertices()
+    for _ in range(len(verts) - 1):
+        updated = False
+        for u, v, w in graph.edges():
+            if dist[u] != float('inf') and dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                parent[v] = u
+                updated = True
+        if not updated:
+            return dist, []
+    # Extra pass to detect & extract
+    for u, v, w in graph.edges():
+        if dist[u] != float('inf') and dist[u] + w < dist[v]:
+            # v is on or reachable to a negative cycle
+            x = v
+            for _ in range(len(verts)):
+                x = parent[x]  # move inside the cycle
+            cycle: List[Any] = []
+            cur = x
+            while True:
+                cycle.append(cur)
+                cur = parent[cur]
+                if cur is None or cur == x or cur in cycle:
+                    if cur == x:
+                        cycle.append(cur)
+                    break
+            # Normalize cycle ordering: rotate so smallest repr first (optional) – keep raw for clarity
+            return dist, cycle
+    return dist, []
 
 # ---------------- Bellman-Ford Path ----------------
 
@@ -215,6 +264,91 @@ def reconstruct_fw_path(next_dict: Dict[Any, Dict[Any, Optional[Any]]], source: 
         path.append(cur)
     return path
 
+# ---------------- Topological Sort (Kahn) ----------------
+
+def topological_order(graph: WeightedAdjacencyListGraph) -> List[Any]:
+    indeg: Dict[Any, int] = {v: 0 for v in graph.vertices()}
+    for u, v, _ in graph.edges():
+        indeg[v] += 1
+    from collections import deque
+    q = deque([v for v, d in indeg.items() if d == 0])
+    order: List[Any] = []
+    while q:
+        u = q.popleft()
+        order.append(u)
+        for nbr, _ in graph.neighbors(u):
+            indeg[nbr] -= 1
+            if indeg[nbr] == 0:
+                q.append(nbr)
+    if len(order) != len(indeg):
+        raise ValueError("Graph is not a DAG (cycle detected)")
+    return order
+
+# ---------------- DAG Shortest Paths ----------------
+
+def dag_shortest_paths(graph: WeightedAdjacencyListGraph, source: Any, order: Optional[List[Any]] = None) -> Dict[Any, float]:
+    """Compute single-source shortest paths on a DAG (allows negative weights).
+    Raises ValueError if cycle detected.
+    """
+    if order is None:
+        order = topological_order(graph)
+    dist: Dict[Any, float] = {v: float('inf') for v in graph.vertices()}
+    dist[source] = 0.0
+    for u in order:
+        if dist[u] == float('inf'):
+            continue
+        for v, w in graph.neighbors(u):
+            if dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+    return dist
+
+# ---------------- Johnson's Algorithm ----------------
+
+def johnson_all_pairs(graph: WeightedAdjacencyListGraph) -> Tuple[Optional[Dict[Any, Dict[Any, float]]], Optional[List[Any]]]:
+    """Johnson's algorithm for all-pairs shortest paths on sparse graphs.
+
+    Returns (distance_dict, negative_cycle) where negative_cycle is a list of vertices
+    if a negative cycle was detected (in the original graph) else None.
+    """
+    # Create a new super-source connecting to all vertices with 0 weight
+    super_source = object()  # unique sentinel
+    temp_graph = WeightedAdjacencyListGraph(directed=True)
+    for v in graph.vertices():
+        temp_graph.add_edge(super_source, v, 0.0)
+    for u, v, w in graph.edges():
+        temp_graph.add_edge(u, v, w)
+    # Bellman-Ford from super source
+    h, neg_cycle_flag = bellman_ford(temp_graph, super_source)
+    if neg_cycle_flag:
+        # Use extraction on original graph for clarity
+        _, cycle = bellman_ford_with_cycle(temp_graph, super_source)
+        return None, cycle
+    # Reweight edges using potentials h
+    vertices = list(graph.vertices())
+    all_dist: Dict[Any, Dict[Any, float]] = {}
+    for s in vertices:
+        # Run Dijkstra with reweighted edges on-the-fly
+        dist: Dict[Any, float] = {v: float('inf') for v in vertices}
+        dist[s] = 0.0
+        pq: List[Tuple[float, Any]] = [(0.0, s)]
+        while pq:
+            d, u = heapq.heappop(pq)
+            if d > dist[u]:
+                continue
+            for v, w in graph.neighbors(u):
+                # reweighted edge
+                rw = w + h[u] - h[v]
+                nd = d + rw
+                if nd < dist[v]:
+                    dist[v] = nd
+                    heapq.heappush(pq, (nd, v))
+        # Convert distances back
+        for v in vertices:
+            if dist[v] < float('inf'):
+                dist[v] = dist[v] - h[s] + h[v]
+        all_dist[s] = dist
+    return all_dist, None
+
 # ---------------- Demonstration ----------------
 
 def _demo():  # pragma: no cover (manual demo)
@@ -233,6 +367,12 @@ def _demo():  # pragma: no cover (manual demo)
     print("Bellman-Ford A->E:", bf_de, path_de, "neg_cycle=", neg2)
     all_dist, nxt = floyd_warshall(g)
     print("Floyd-Warshall A->E:", all_dist['A']['E'], reconstruct_fw_path(nxt,'A','E'))
+    # Johnson demo
+    j_dist, cycle = johnson_all_pairs(g)
+    if cycle:
+        print("Johnson detected negative cycle:", cycle)
+    else:
+        print("Johnson all-pairs from A to E:", j_dist['A']['E'])
 
 if __name__ == '__main__':
     _demo()

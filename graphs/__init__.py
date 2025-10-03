@@ -14,8 +14,12 @@ from .shortest_path import (
     dijkstra_with_path,
     bellman_ford,
     bellman_ford_with_path,
+    bellman_ford_with_cycle,
     floyd_warshall,
     reconstruct_fw_path,
+    topological_order,
+    dag_shortest_paths,
+    johnson_all_pairs,
 )
 
 __all__ = [
@@ -27,6 +31,10 @@ __all__ = [
     "dijkstra_with_path",
     "bellman_ford",
     "bellman_ford_with_path",
+    "bellman_ford_with_cycle",
     "floyd_warshall",
     "reconstruct_fw_path",
+    "topological_order",
+    "dag_shortest_paths",
+    "johnson_all_pairs",
 ]
