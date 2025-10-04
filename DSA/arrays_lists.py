@@ -454,6 +454,173 @@ class ArrayAlgorithms:
         result.extend(left[i:])
         result.extend(right[j:])
         return result
+
+    def heap_sort(self, arr: List[int]) -> List[int]:
+        """
+        Heap sort implementation (in-place, not stable)
+
+        Time Complexity: O(n log n)
+        Space Complexity: O(1)
+        Notes:
+        - Builds a max-heap and repeatedly extracts the maximum to the end.
+        - Operates in-place on the provided list.
+        """
+        n = len(arr)
+
+        def sift_down(start: int, end: int) -> None:
+            root = start
+            while True:
+                child = 2 * root + 1
+                if child > end:
+                    break
+                # Select the larger child
+                if child + 1 <= end and arr[child] < arr[child + 1]:
+                    child += 1
+                if arr[root] < arr[child]:
+                    arr[root], arr[child] = arr[child], arr[root]
+                    root = child
+                else:
+                    break
+
+        # Build max-heap
+        for start in range(n // 2 - 1, -1, -1):
+            sift_down(start, n - 1)
+
+        # Extract elements from heap
+        for end in range(n - 1, 0, -1):
+            arr[0], arr[end] = arr[end], arr[0]
+            sift_down(0, end - 1)
+
+        return arr
+
+    def counting_sort(self, arr: List[int]) -> List[int]:
+        """
+        Counting sort (stable) for integers, supports negatives via offset.
+
+        Time Complexity: O(n + k) where k is the value range (max-min+1)
+        Space Complexity: O(n + k)
+        Best used when the range of values (k) is not much larger than n.
+        Returns a new sorted list.
+        """
+        if not arr:
+            return []
+
+        min_v, max_v = min(arr), max(arr)
+        k = max_v - min_v + 1
+        counts = [0] * k
+
+        for v in arr:
+            counts[v - min_v] += 1
+
+        # Prefix sums for stable placement
+        for i in range(1, k):
+            counts[i] += counts[i - 1]
+
+        out = [0] * len(arr)
+        # Iterate backwards to make it stable
+        for v in reversed(arr):
+            idx = v - min_v
+            counts[idx] -= 1
+            out[counts[idx]] = v
+
+        return out
+
+    def radix_sort(self, arr: List[int], base: int = 10) -> List[int]:
+        """
+        Radix Sort (LSD) for integers. Stable. Handles negatives by
+        sorting absolute values and recombining.
+
+        Time Complexity: O(d * (n + base)), d = number of digits
+        Space Complexity: O(n + base)
+        Returns a new sorted list.
+        """
+        if not arr:
+            return []
+
+        def lsd_radix_nonneg(nums: List[int]) -> List[int]:
+            if not nums:
+                return []
+            max_val = max(nums)
+            exp = 1
+            out = nums[:]
+            while max_val // exp > 0:
+                # Counting sort by digit at exp
+                count = [0] * base
+                for v in out:
+                    digit = (v // exp) % base
+                    count[digit] += 1
+                for i in range(1, base):
+                    count[i] += count[i - 1]
+                temp = [0] * len(out)
+                for v in reversed(out):
+                    digit = (v // exp) % base
+                    count[digit] -= 1
+                    temp[count[digit]] = v
+                out = temp
+                exp *= base
+            return out
+
+        # Separate negatives and non-negatives
+        pos = [v for v in arr if v >= 0]
+        neg = [-v for v in arr if v < 0]  # store absolute values
+
+        pos_sorted = lsd_radix_nonneg(pos)
+        neg_sorted_abs = lsd_radix_nonneg(neg)
+        # Recombine: negatives in decreasing abs become increasing actual values
+        neg_sorted = [-v for v in reversed(neg_sorted_abs)]
+        return neg_sorted + pos_sorted
+
+    def bucket_sort(self, arr: List[float], bucket_count: Optional[int] = None) -> List[float]:
+        """
+        Bucket sort for real numbers. Distributes elements into buckets
+        based on normalized value, sorts each bucket (insertion sort), and
+        concatenates. Works best when input is uniformly distributed.
+
+        Time Complexity: Average O(n + k) with k buckets; worst O(n^2) if
+                         all elements fall into one bucket.
+        Space Complexity: O(n + k)
+        Returns a new sorted list.
+        """
+        n = len(arr)
+        if n == 0:
+            return []
+
+        if bucket_count is None:
+            # heuristic: sqrt(n) buckets, at least 1
+            import math
+            bucket_count = max(1, int(math.sqrt(n)))
+
+        min_v, max_v = min(arr), max(arr)
+        if max_v == min_v:
+            return arr[:]
+
+        # Create buckets
+        buckets: List[List[float]] = [[] for _ in range(bucket_count)]
+        rng = max_v - min_v
+        # Distribute elements
+        for v in arr:
+            # Normalize to [0, 1] then scale to bucket_count-1
+            idx = int((v - min_v) / rng * (bucket_count - 1))
+            buckets[idx].append(v)
+
+        # Insertion sort within each bucket (stable and simple)
+        def insertion(a: List[float]) -> None:
+            for i in range(1, len(a)):
+                key = a[i]
+                j = i - 1
+                while j >= 0 and a[j] > key:
+                    a[j + 1] = a[j]
+                    j -= 1
+                a[j + 1] = key
+
+        for b in buckets:
+            insertion(b)
+
+        # Concatenate buckets
+        out: List[float] = []
+        for b in buckets:
+            out.extend(b)
+        return out
     
     # ==================== CLASSIC ARRAY PROBLEMS ====================
     

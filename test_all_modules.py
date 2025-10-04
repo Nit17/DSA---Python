@@ -41,11 +41,33 @@ def test_arrays_lists():
     """Test arrays and lists module"""
     print("Testing Arrays/Lists module...")
     try:
-        from arrays_lists import ArrayOperations
+        from arrays_lists import ArrayOperations, ArrayAlgorithms
         operations = ArrayOperations()
         # Quick test
         result = operations.linear_search([1, 2, 3, 4, 5], 3)
         assert result == 2, "Array linear search failed"
+        # Sorting algorithms quick checks
+        alg = ArrayAlgorithms()
+        data_sets = [
+            [5,1,4,2,8,0,2],
+            [3,3,3,3],
+            list(range(10,0,-1)),
+            [0,-5,7,-3,2,2,-5,10]
+        ]
+        for data in data_sets:
+            expected = sorted(data)
+            assert alg.bubble_sort(data[:]) == expected, "Bubble sort failed"
+            assert alg.selection_sort(data[:]) == expected, "Selection sort failed"
+            assert alg.insertion_sort(data[:]) == expected, "Insertion sort failed"
+            assert alg.quick_sort(data[:]) == expected, "Quick sort failed"
+            assert alg.merge_sort(data[:]) == expected, "Merge sort failed"
+            assert alg.heap_sort(data[:]) == expected, "Heap sort failed"
+            # counting/radix only for integers
+            assert alg.counting_sort(data[:]) == expected, "Counting sort failed"
+            assert alg.radix_sort(data[:]) == expected, "Radix sort failed"
+        # bucket sort on floats
+        float_data = [0.42, 0.32, 0.23, 0.52, 0.25, 0.47, 0.51]
+        assert ArrayAlgorithms().bucket_sort(float_data) == sorted(float_data), "Bucket sort failed"
         print("✓ Arrays/Lists module working")
         return True
     except Exception as e:
