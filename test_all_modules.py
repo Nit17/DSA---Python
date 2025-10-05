@@ -370,6 +370,34 @@ def test_graphs():
         print(f"✗ Graphs module failed: {e}")
         return False
 
+def test_dp():
+    """Test dynamic programming module"""
+    print("Testing Dynamic Programming module...")
+    try:
+        from dp import DynamicProgramming
+        dp = DynamicProgramming()
+
+        # Fibonacci
+        assert dp.fib_memo(10) == 55 and dp.fib_tab(10) == 55, "Fibonacci DP failed"
+
+        # 0/1 Knapsack
+        weights, values, cap = [2,3,4,5], [3,4,5,6], 5
+        max_val, picked = dp.knapsack_01(weights, values, cap)
+        assert max_val == 7 and set(picked) in ({0,1},), "Knapsack failed"
+
+        # LIS length
+        assert dp.lis_length([10,9,2,5,3,7,101,18]) == 4, "LIS length failed"
+
+        # Matrix Chain Multiplication (classic example)
+        cost, paren = dp.matrix_chain_multiplication([30,35,15,5,10,20,25])
+        assert cost == 15125 and paren, "MCM failed"
+
+        print("✓ Dynamic Programming module working")
+        return True
+    except Exception as e:
+        print(f"✗ Dynamic Programming module failed: {e}")
+        return False
+
 def main():
     """Run all tests"""
     print("DSA-Python Module Verification")
@@ -386,6 +414,7 @@ def main():
         test_hashing,
         test_trees,
         test_graphs,
+        test_dp,
     ]
     
     passed = 0
