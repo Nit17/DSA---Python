@@ -43,9 +43,14 @@ def test_arrays_lists():
     try:
         from arrays_lists import ArrayOperations, ArrayAlgorithms
         operations = ArrayOperations()
-        # Quick test
+        # Quick search tests
         result = operations.linear_search([1, 2, 3, 4, 5], 3)
         assert result == 2, "Array linear search failed"
+        arr_sorted = [1,2,3,4,5,6,7,8,9]
+        assert operations.binary_search(arr_sorted, 6) == 5, "Binary search failed"
+        assert operations.binary_search(arr_sorted, 10) == -1, "Binary search not-found failed"
+        assert operations.ternary_search(arr_sorted, 6) == 5, "Ternary search failed"
+        assert operations.ternary_search(arr_sorted, -1) == -1, "Ternary search not-found failed"
         # Sorting algorithms quick checks
         alg = ArrayAlgorithms()
         data_sets = [

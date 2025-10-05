@@ -189,6 +189,37 @@ class ArrayOperations:
                 right = mid - 1
         
         return -1
+
+    def ternary_search(self, arr: List[int], target: int) -> int:
+        """
+        Find index of target element using ternary search (requires sorted array)
+
+        Splits the search space into three nearly equal parts each iteration
+        by probing two midpoints m1 and m2 such that left < m1 < m2 < right.
+        While asymptotically similar to binary search (O(log n)), it performs
+        two comparisons per iteration and is generally not faster in practice.
+
+        Time Complexity: O(log base 3 of n)
+        Space Complexity: O(1)
+        Returns: index if found, else -1
+        """
+        left, right = 0, len(arr) - 1
+        while left <= right:
+            third = (right - left) // 3
+            m1 = left + third
+            m2 = right - third
+            if arr[m1] == target:
+                return m1
+            if arr[m2] == target:
+                return m2
+            if target < arr[m1]:
+                right = m1 - 1
+            elif target > arr[m2]:
+                left = m2 + 1
+            else:
+                left = m1 + 1
+                right = m2 - 1
+        return -1
     
     def find_min_max(self, arr: List[int]) -> Tuple[int, int]:
         """
