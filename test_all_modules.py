@@ -92,6 +92,42 @@ def test_strings():
         return True
     except Exception as e:
         print(f"✗ Strings module failed: {e}")
+def test_greedy():
+    """Test greedy algorithms module"""
+    print("Testing Greedy module...")
+    try:
+        from greedy import GreedyAlgorithms
+        g = GreedyAlgorithms()
+
+        # Activity selection should choose a maximum compatible subset
+        activities = [(1,4), (3,5), (0,6), (5,7), (8,9), (5,9)]
+        chosen = g.activity_selection(activities)
+        # Validate non-overlapping and maximal size for this classic set (3)
+        assert all(chosen[i][1] <= chosen[i+1][0] for i in range(len(chosen)-1)), "Activities overlap"
+        assert len(chosen) == 3, "Activity selection size incorrect"
+
+        # Huffman coding round-trip
+        text = "greedy huffman test"
+        freq = {}
+        for ch in text:
+            freq[ch] = freq.get(ch, 0) + 1
+        codes, root = g.huffman_codes(freq)
+        enc = g.huffman_encode(text, codes)
+        dec = g.huffman_decode(enc, root)
+        assert dec == text, "Huffman decode mismatch"
+        # Prefix-free sanity: no code is a prefix of another
+        code_list = list(codes.values())
+        for i in range(len(code_list)):
+            for j in range(len(code_list)):
+                if i != j:
+                    assert not code_list[j].startswith(code_list[i]), "Codes not prefix-free"
+
+        print("✓ Greedy module working")
+        return True
+    except Exception as e:
+        print(f"✗ Greedy module failed: {e}")
+        return False
+
         return False
 
 def test_linked_lists():
@@ -99,6 +135,7 @@ def test_linked_lists():
     print("Testing Linked Lists module...")
     try:
         from linked_lists import SinglyLinkedList
+        test_greedy,
         sll = SinglyLinkedList()
         sll.append(1)
         sll.append(2)
