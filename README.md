@@ -56,6 +56,7 @@ This repository contains implementations of fundamental data structures and algo
 | Shortest path unweighted | Queue (BFS) | O(V+E) | Layered expansion ensures minimal edges | Requires adjacency structure |
 | Balanced frequency counts | Hash map + counters | O(1) updates | Direct tallies | Large key diversity memory cost |
 
+
 Legend: L = length of key/string; V = vertices; E = edges; k = retained subset size.
 
 > Selection rule of thumb: prefer the simplest structure that meets performance constraints; introduce specialized trees/tries/heaps only when profiling or requirements justify added complexity.
