@@ -19,6 +19,9 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
   - [Hashing / Dictionaries / Sets](#hashing--dictionaries--sets)
   - [Trees / Heaps / Tries](#trees--heaps--tries)
   - [Graphs](#graphs)
+  - [Dynamic Programming](#dynamic-programming)
+  - [Greedy Algorithms](#greedy-algorithms)
+  - [Backtracking](#backtracking)
 - [Features](#features)
 - [Performance Analysis](#performance-analysis)
 - [Contributing](#contributing)
@@ -32,6 +35,7 @@ This repository contains implementations of fundamental data structures and algo
 - **Practical**: Real-world problem solutions
 - **Performance-focused**: Time and space complexity analysis
 - **Interview-ready**: Common coding interview problems and patterns
+ 
 
 > NOTE: Every major module now starts with an expanded in-file theory docstring covering: core definitions, invariants, complexity tables, trade-offs, pitfalls, implementation details, and selection guidance. Open the source to study deeper theory alongside code.
 
@@ -45,12 +49,6 @@ This repository contains implementations of fundamental data structures and algo
 | Priority processing (min first) | MinHeap | push/pop O(log n), peek O(1) | Partial order minimal overhead | No fast arbitrary deletion |
 | Dynamic set / fast membership | Set / Hash Table | add/find/remove O(1) | Expected constant time | Worst-case O(n) collisions |
 | Key → Value mapping | Dict / Hash Table | get/put O(1) | Ubiquitous, optimized | Unordered (insertion order preserved but not sorted) |
-| Prefix queries / autocomplete | Trie | insert/search O(L) | Shared prefix compression | Higher memory overhead |
-| Range sum + point update | Fenwick Tree | update/query O(log n) | Simple, low memory | Hard for min/max ops |
-| Range sum/min + range updates (extensible) | Segment Tree (+lazy) | query/update O(log n) | Supports many associative ops | More code + memory |
-| Streaming top-k (k small) | Heap (size k) | push/pop O(log k) | Keeps k best efficiently | Not sorted internally |
-| All permutations / combinations generation | Backtracking + recursion | – | Natural tree exploration | Exponential time |
-| Detect cycles / predecessor path length | Hash set (visited) | O(1) per step | Cycle detection in graphs | Memory for visited |
 | LRU Cache | Ordered dict / deque+dict | O(1) | Quick recency tracking | Need to manage eviction logic |
 | Monotonic next greater / sliding window max | Monotonic Stack / Deque | O(n) total | Each element pushed/popped ≤ once | Logic bugs easy if conditions wrong |
 | Shortest path unweighted | Queue (BFS) | O(V+E) | Layered expansion ensures minimal edges | Requires adjacency structure |
@@ -59,6 +57,8 @@ This repository contains implementations of fundamental data structures and algo
 Legend: L = length of key/string; V = vertices; E = edges; k = retained subset size.
 
 > Selection rule of thumb: prefer the simplest structure that meets performance constraints; introduce specialized trees/tries/heaps only when profiling or requirements justify added complexity.
+
+ 
 
 ## 📁 Repository Structure
 
@@ -73,16 +73,24 @@ DSA-Python/
 │   ├── stacks.py                   # Stack implementations and algorithms
 │   ├── queues.py                   # Queue implementations and algorithms
 │   ├── hashing.py                  # Hash tables, hashing algorithms
-│   ├── trees/                      # Tree & hierarchical structures package
-│   │   ├── __init__.py             # Exports aggregated tree structures
+│   ├── dp.py                       # Dynamic Programming classics
+│   ├── greedy.py                   # Greedy (Activity Selection, Huffman)
+│   ├── backtracking.py             # Backtracking (N-Queens, Sudoku)
+│   ├── trees/
+│   │   ├── __init__.py             # Aggregated tree exports
 │   │   ├── binary_tree.py          # Generic binary tree traversals & utilities
 │   │   ├── bst.py                  # Binary Search Tree implementation
 │   │   ├── heaps.py                # MinHeap / MaxHeap implementations
 │   │   ├── trie.py                 # Trie (prefix tree)
 │   │   ├── segment_tree.py         # Segment Tree (range sum)
 │   │   └── fenwick_tree.py         # Fenwick Tree / Binary Indexed Tree
+├── graphs/
+│   ├── __init__.py                 # Public API (structures + algorithms)
+│   ├── Traversals.py               # Unweighted representations + BFS/DFS
+│   ├── shortest_path.py            # Dijkstra, Bellman-Ford, Floyd, Johnson, DAG
+│   └── base.py                     # Protocol interfaces
 ├── README.md                       # This file
-└── .git/                          # Git repository files
+└── .git/                           # Git repository files
 ```
 
 ## 🚀 Installation
@@ -468,7 +476,7 @@ print(ft.range_sum(0,4))    # total updated sum
 
 This module covers graph representations and fundamental graph algorithms for modeling relationships and networks.
 
-**File**: `DSA/graphs.py`
+**Package**: `graphs/`
 
 **What it covers**:
 - Graph representations (Adjacency List, Adjacency Matrix)
@@ -512,7 +520,7 @@ This module covers graph representations and fundamental graph algorithms for mo
 
 **Sample Usage**:
 ```python
-from DSA.graphs import AdjacencyListGraph, GraphAlgorithms
+from graphs import AdjacencyListGraph, GraphAlgorithms
 
 # Create undirected graph
 g = AdjacencyListGraph()
@@ -533,7 +541,7 @@ print(alg.dfs(g, 0))              # e.g. [0,1,2,3]
 print(alg.dfs_iterative(g, 0))    # Similar ordering, may vary
 
 # Shortest path (unweighted BFS reconstruction)
-from DSA.graphs import GraphAlgorithms as GA
+from graphs import GraphAlgorithms as GA
 print(GA.shortest_path_unweighted(g, 0, 3))  # [0,1,3]
 
 # Multi-source BFS (distances from closest of sources 0 or 3)
@@ -553,7 +561,7 @@ Use Dijkstra for large sparse graphs with non-negative weights. Use Bellman-Ford
 
 **Weighted Graph Sample**:
 ```python
-from DSA.graphs import (
+from graphs import (
   WeightedAdjacencyListGraph,
   dijkstra, dijkstra_with_path,
   bellman_ford, bellman_ford_with_path,
@@ -604,8 +612,8 @@ print(rec.is_palindrome("racecar"))        # True
 
 **What it covers**:
 - Fundamental array operations (CRUD)
-- Search algorithms (linear, binary)
-- Sorting algorithms (bubble, selection, insertion, quick, merge)
+- Search algorithms (linear, binary, ternary)
+- Sorting algorithms (bubble, selection, insertion, quick, merge, heap, counting, radix, bucket)
 - Classic array problems and interview questions
 - Array manipulation techniques
 - Common patterns and optimization strategies
@@ -638,6 +646,76 @@ ops.rotate_right(arr, 2)  # [4, 5, 1, 2, 3]
 # Classic problems
 indices = algos.two_sum([2, 7, 11, 15], 9)  # [0, 1]
 max_sum = algos.maximum_subarray_sum([-2, 1, -3, 4, -1, 2, 1, -5, 4])  # 6
+
+# Searching
+ops.binary_search([1,2,3,4,5], 4)       # 3
+ops.ternary_search([1,2,3,4,5], 4)      # 3
+
+# Extra sorting algorithms
+algos.heap_sort([3,1,4,1,5])            # [1,1,3,4,5]
+algos.counting_sort([3,-1,2,-1])        # [-1,-1,2,3]
+algos.radix_sort([170,45,75,-90,802,24,2,66])  # sorted list
+algos.bucket_sort([0.42,0.32,0.23,0.52,0.25])  # sorted list
+```
+
+### Dynamic Programming
+
+**File**: `DSA/dp.py`
+
+**What it covers**:
+- Fibonacci (memoization and tabulation)
+- 0/1 Knapsack (max value with item recovery)
+- Longest Increasing Subsequence (O(n log n))
+- Matrix Chain Multiplication (optimal parenthesization)
+
+**Key Class**: `DynamicProgramming`
+
+**Sample Usage**:
+```python
+from DSA.dp import DynamicProgramming
+dp = DynamicProgramming()
+dp.fib_tab(10)                                 # 55
+dp.knapsack_01([2,3,4,5], [3,4,5,6], 5)        # (7, [0,1])
+dp.lis_length([10,9,2,5,3,7,101,18])           # 4
+dp.matrix_chain_multiplication([30,35,15,5,10,20,25])  # (15125, '(...)')
+```
+
+### Greedy Algorithms
+
+**File**: `DSA/greedy.py`
+
+**What it covers**:
+- Activity Selection (max non-overlapping intervals)
+- Huffman Coding (optimal prefix-free codes) with encode/decode
+
+**Key Class**: `GreedyAlgorithms`
+
+**Sample Usage**:
+```python
+from DSA.greedy import GreedyAlgorithms
+g = GreedyAlgorithms()
+g.activity_selection([(1,4),(3,5),(0,6),(5,7),(8,9),(5,9)])  # e.g., [(1,4),(5,7),(8,9)]
+codes, root = g.huffman_codes({'a':5,'b':1,'c':2})
+enc = g.huffman_encode('abac', codes)
+g.huffman_decode(enc, root)  # 'abac'
+```
+
+### Backtracking
+
+**File**: `DSA/backtracking.py`
+
+**What it covers**:
+- N-Queens: all valid placements
+- Sudoku Solver: standard 9×9 puzzles (0 = empty)
+
+**Key Class**: `BacktrackingAlgorithms`
+
+**Sample Usage**:
+```python
+from DSA.backtracking import BacktrackingAlgorithms
+bt = BacktrackingAlgorithms()
+sols, count = bt.n_queens(4)          # 2 solutions
+solved = bt.sudoku_solve(grid_9x9)    # solved grid or None
 ```
 
 ### Strings
