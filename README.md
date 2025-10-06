@@ -22,6 +22,8 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
   - [Dynamic Programming](#dynamic-programming)
   - [Greedy Algorithms](#greedy-algorithms)
   - [Backtracking](#backtracking)
+  - [Bit Manipulation](#bit-manipulation)
+  - [Mathematical Algorithms](#mathematical-algorithms)
 - [Features](#features)
 - [Performance Analysis](#performance-analysis)
 - [Contributing](#contributing)
@@ -76,6 +78,8 @@ DSA-Python/
 │   ├── dp.py                       # Dynamic Programming classics
 │   ├── greedy.py                   # Greedy (Activity Selection, Huffman)
 │   ├── backtracking.py             # Backtracking (N-Queens, Sudoku)
+│   ├── bit_manipulation.py         # Bit hacks and utilities
+│   ├── math_algorithms.py          # Number theory & modular arithmetic
 │   ├── trees/
 │   │   ├── __init__.py             # Aggregated tree exports
 │   │   ├── binary_tree.py          # Generic binary tree traversals & utilities
@@ -716,6 +720,52 @@ from DSA.backtracking import BacktrackingAlgorithms
 bt = BacktrackingAlgorithms()
 sols, count = bt.n_queens(4)          # 2 solutions
 solved = bt.sudoku_solve(grid_9x9)    # solved grid or None
+```
+
+### Bit Manipulation
+
+**File**: `DSA/bit_manipulation.py`
+
+**What it covers**:
+- Single-bit ops: get, set, clear, toggle
+- Counting set bits (Kernighan), parity
+- Power of two checks, lowest/highest set bit
+- Iterate all submasks of a mask
+
+**Key Class**: `BitAlgorithms`
+
+**Sample Usage**:
+```python
+from DSA.bit_manipulation import BitAlgorithms
+b = BitAlgorithms()
+x = 0b10110
+b.get_bit(x, 1)                 # 1
+b.count_set_bits(x)             # 4
+b.is_power_of_two(16)           # True
+list(b.iterate_subsets(0b1011)) # e.g., [0b1011, 0b1010, ..., 0]
+```
+
+### Mathematical Algorithms
+
+**File**: `DSA/math_algorithms.py`
+
+**What it covers**:
+- GCD, LCM, Extended GCD
+- Fast exponentiation, modular exponentiation
+- Modular inverse, modular add/mul helpers
+- Sieve of Eratosthenes
+
+**Key Class**: `MathAlgorithms`
+
+**Sample Usage**:
+```python
+from DSA.math_algorithms import MathAlgorithms
+m = MathAlgorithms()
+m.gcd(54, 24)                    # 6
+m.lcm(21, 6)                     # 42
+m.mod_pow(2, 10, 1_000_000_007)  # 1024 mod M
+m.mod_inverse(3, 11)             # 4
+m.sieve_of_eratosthenes(20)      # [2,3,5,7,11,13,17,19]
 ```
 
 ### Strings

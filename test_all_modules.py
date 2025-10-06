@@ -446,6 +446,65 @@ def test_graphs():
         print(f"✗ Graphs module failed: {e}")
         return False
 
+def test_bit_manipulation():
+    """Test bit manipulation utilities"""
+    print("Testing Bit Manipulation module...")
+    try:
+        from bit_manipulation import BitAlgorithms
+        b = BitAlgorithms()
+
+        # Single-bit ops
+        assert b.get_bit(0b10110, 1) == 1, "get_bit failed"
+        assert b.set_bit(0, 3) == 0b1000, "set_bit failed"
+        assert b.clear_bit(0b1111, 2) == 0b1011, "clear_bit failed"
+        assert b.toggle_bit(0b1000, 3) == 0, "toggle_bit failed"
+
+        # Aggregate properties
+        assert b.count_set_bits(0b101101) == 4, "count_set_bits failed"
+        assert b.is_power_of_two(16) and not b.is_power_of_two(18), "is_power_of_two failed"
+        assert b.parity(0b1011) == 1, "parity failed"
+        assert b.lowest_set_bit(0b1011000) == 0b1000, "lowest_set_bit failed"
+        assert b.highest_set_bit_index(0b1001000) == 6, "highest_set_bit_index failed"
+
+        # Subsets
+        subs = list(b.iterate_subsets(0b1011))
+        assert 0 in subs and 0b1011 in subs and len(subs) == 8, "iterate_subsets failed"
+
+        print("✓ Bit Manipulation module working")
+        return True
+    except Exception as e:
+        print(f"✗ Bit Manipulation module failed: {e}")
+        return False
+
+def test_math_algorithms():
+    """Test mathematical / number theory algorithms"""
+    print("Testing Mathematical Algorithms module...")
+    try:
+        from math_algorithms import MathAlgorithms
+        m = MathAlgorithms()
+
+        # GCD / LCM / Extended GCD
+        assert m.gcd(54, 24) == 6, "gcd failed"
+        assert m.lcm(21, 6) == 42, "lcm failed"
+        g, x, y = m.extended_gcd(30, 20)
+        assert g == 10 and 30 * x + 20 * y == g, "extended_gcd identity failed"
+
+        # Power and modular arithmetic
+        assert m.fast_pow(2, 10) == 1024, "fast_pow failed"
+        assert m.mod_pow(2, 10, 1000) == 24, "mod_pow failed"
+        assert m.mod_pow(2, -1, 11) == 6, "mod_pow negative exponent failed"
+        assert m.mod_add(1000, 25, 7) == 3, "mod_add failed"
+        assert m.mod_mul(123456789, 987654321, 97) == ((123456789 % 97) * (987654321 % 97)) % 97, "mod_mul failed"
+        assert m.mod_inverse(3, 11) == 4, "mod_inverse failed"
+
+        # Sieve
+        assert m.sieve_of_eratosthenes(20) == [2,3,5,7,11,13,17,19], "sieve failed"
+
+        print("✓ Mathematical Algorithms module working")
+        return True
+    except Exception as e:
+        print(f"✗ Mathematical Algorithms module failed: {e}")
+        return False
 def test_dp():
     """Test dynamic programming module"""
     print("Testing Dynamic Programming module...")
@@ -524,6 +583,8 @@ def main():
         test_recursion,
         test_arrays_lists,
         test_strings,
+        test_bit_manipulation,
+        test_math_algorithms,
         test_linked_lists,
         test_stacks,
         test_queues,
