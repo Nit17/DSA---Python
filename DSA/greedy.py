@@ -10,9 +10,10 @@ This module implements two canonical greedy problems:
 """
 
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, Iterable, List, Optional, Tuple
 import heapq
+import itertools
 
 
 class GreedyAlgorithms:
@@ -38,12 +39,12 @@ class GreedyAlgorithms:
         return chosen
 
     # --------------------------- Huffman Coding ---------------------------
-    @dataclass(order=True)
+    @dataclass
     class _Node:
         freq: int
-        char: Optional[str] = None
-        left: Optional['GreedyAlgorithms._Node'] = None
-        right: Optional['GreedyAlgorithms._Node'] = None
+        char: Optional[str] = field(default=None)
+        left: Optional['GreedyAlgorithms._Node'] = field(default=None)
+        right: Optional['GreedyAlgorithms._Node'] = field(default=None)
 
     def huffman_codes(self, freq_map: Dict[str, int]) -> Tuple[Dict[str, str], Optional['_Node']]:
         """Build Huffman codes from a frequency map.
@@ -53,23 +54,26 @@ class GreedyAlgorithms:
         if not freq_map:
             return {}, None
 
-        heap: List[GreedyAlgorithms._Node] = []
+        # Use (freq, tie, node) to avoid comparing nodes on ties
+        counter = itertools.count()
+        heap: List[Tuple[int, int, GreedyAlgorithms._Node]] = []
         for ch, fr in freq_map.items():
-            heapq.heappush(heap, GreedyAlgorithms._Node(fr, ch))
+            heapq.heappush(heap, (fr, next(counter), GreedyAlgorithms._Node(fr, ch)))
 
         if len(heap) == 1:
             # Single symbol edge case
-            only = heap[0]
+            _, _, only = heap[0]
             return {only.char: '0'}, only
 
         # Build tree
         while len(heap) > 1:
-            a = heapq.heappop(heap)
-            b = heapq.heappop(heap)
-            parent = GreedyAlgorithms._Node(a.freq + b.freq, None, a, b)
-            heapq.heappush(heap, parent)
+            fa, _, a = heapq.heappop(heap)
+            fb, _, b = heapq.heappop(heap)
+            parent = GreedyAlgorithms._Node(fa + fb, None, a, b)
+            heapq.heappush(heap, (parent.freq, next(counter), parent))
 
-        root = heap[0]
+        # Extract root and build codes via DFS
+        _, _, root = heap[0]
         codes: Dict[str, str] = {}
 
         def dfs(node: GreedyAlgorithms._Node, path: str) -> None:

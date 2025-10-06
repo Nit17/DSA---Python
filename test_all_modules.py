@@ -92,6 +92,7 @@ def test_strings():
         return True
     except Exception as e:
         print(f"✗ Strings module failed: {e}")
+        return False
 def test_greedy():
     """Test greedy algorithms module"""
     print("Testing Greedy module...")
@@ -128,14 +129,52 @@ def test_greedy():
         print(f"✗ Greedy module failed: {e}")
         return False
 
+def test_backtracking():
+    """Test backtracking algorithms module"""
+    print("Testing Backtracking module...")
+    try:
+        from backtracking import BacktrackingAlgorithms
+        bt = BacktrackingAlgorithms()
+
+        # N-Queens n=4 has 2 solutions
+        sols, cnt = bt.n_queens(4)
+        assert cnt == 2 and len(sols) == 2, "N-Queens count incorrect"
+        # Basic structure checks
+        for sol in sols:
+            assert len(sol) == 4 and all(len(row) == 4 for row in sol), "N-Queens board size wrong"
+            assert all(row.count('Q') == 1 for row in sol), "Each row must have one queen"
+
+        # Sudoku solver on a standard puzzle
+        puzzle = [
+            [5,3,0,0,7,0,0,0,0],
+            [6,0,0,1,9,5,0,0,0],
+            [0,9,8,0,0,0,0,6,0],
+            [8,0,0,0,6,0,0,0,3],
+            [4,0,0,8,0,3,0,0,1],
+            [7,0,0,0,2,0,0,0,6],
+            [0,6,0,0,0,0,2,8,0],
+            [0,0,0,4,1,9,0,0,5],
+            [0,0,0,0,8,0,0,7,9],
+        ]
+        solved = bt.sudoku_solve(puzzle)
+        assert solved is not None, "Sudoku not solved"
+        # Validate solved grid: numbers 1..9 in each row/col
+        for i in range(9):
+            assert sorted(solved[i]) == list(range(1,10)), "Row invalid"
+            assert sorted([solved[r][i] for r in range(9)]) == list(range(1,10)), "Column invalid"
+
+        print("✓ Backtracking module working")
+        return True
+    except Exception as e:
+        print(f"✗ Backtracking module failed: {e}")
         return False
+
 
 def test_linked_lists():
     """Test linked lists module"""
     print("Testing Linked Lists module...")
     try:
         from linked_lists import SinglyLinkedList
-        test_greedy,
         sll = SinglyLinkedList()
         sll.append(1)
         sll.append(2)
@@ -435,6 +474,46 @@ def test_dp():
         print(f"✗ Dynamic Programming module failed: {e}")
         return False
 
+    def test_backtracking():
+        """Test backtracking algorithms module"""
+        print("Testing Backtracking module...")
+        try:
+            from backtracking import BacktrackingAlgorithms
+            bt = BacktrackingAlgorithms()
+
+            # N-Queens n=4 has 2 solutions
+            sols, cnt = bt.n_queens(4)
+            assert cnt == 2 and len(sols) == 2, "N-Queens count incorrect"
+            # Basic structure checks
+            for sol in sols:
+                assert len(sol) == 4 and all(len(row) == 4 for row in sol), "N-Queens board size wrong"
+                assert all(row.count('Q') == 1 for row in sol), "Each row must have one queen"
+
+            # Sudoku solver on a standard puzzle
+            puzzle = [
+                [5,3,0,0,7,0,0,0,0],
+                [6,0,0,1,9,5,0,0,0],
+                [0,9,8,0,0,0,0,6,0],
+                [8,0,0,0,6,0,0,0,3],
+                [4,0,0,8,0,3,0,0,1],
+                [7,0,0,0,2,0,0,0,6],
+                [0,6,0,0,0,0,2,8,0],
+                [0,0,0,4,1,9,0,0,5],
+                [0,0,0,0,8,0,0,7,9],
+            ]
+            solved = bt.sudoku_solve(puzzle)
+            assert solved is not None, "Sudoku not solved"
+            # Validate solved grid: numbers 1..9 in each row/col
+            for i in range(9):
+                assert sorted(solved[i]) == list(range(1,10)), "Row invalid"
+                assert sorted([solved[r][i] for r in range(9)]) == list(range(1,10)), "Column invalid"
+
+            print("✓ Backtracking module working")
+            return True
+        except Exception as e:
+            print(f"✗ Backtracking module failed: {e}")
+            return False
+
 def main():
     """Run all tests"""
     print("DSA-Python Module Verification")
@@ -451,6 +530,8 @@ def main():
         test_hashing,
         test_trees,
         test_graphs,
+        test_backtracking,
+        test_greedy,
         test_dp,
     ]
     
