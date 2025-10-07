@@ -4,6 +4,7 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
 
 ## 📋 Table of Contents
 
+
 - [Overview](#overview)
 - [Repository Structure](#repository-structure)
 - [Installation](#installation)
