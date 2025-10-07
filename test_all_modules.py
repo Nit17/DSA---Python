@@ -505,6 +505,28 @@ def test_math_algorithms():
     except Exception as e:
         print(f"✗ Mathematical Algorithms module failed: {e}")
         return False
+
+def test_union_find():
+    """Test Disjoint Set Union (Union-Find) module"""
+    print("Testing Disjoint Set Union module...")
+    try:
+        from union_find import UnionFind
+        uf = UnionFind()
+        for i in range(1, 7):
+            uf.add(i)
+        assert not uf.connected(1, 2)
+        uf.union(1, 2)
+        uf.union(3, 4)
+        uf.union(2, 3)
+        assert uf.connected(1, 4) and not uf.connected(1, 5), "connected() failed"
+        assert uf.component_size(1) == 4, "component_size failed"
+        # Union already connected should return False
+        assert uf.union(1, 4) is False, "union idempotency failed"
+        print("✓ Disjoint Set Union module working")
+        return True
+    except Exception as e:
+        print(f"✗ Disjoint Set Union module failed: {e}")
+        return False
 def test_dp():
     """Test dynamic programming module"""
     print("Testing Dynamic Programming module...")
@@ -585,6 +607,7 @@ def main():
         test_strings,
         test_bit_manipulation,
         test_math_algorithms,
+        test_union_find,
         test_linked_lists,
         test_stacks,
         test_queues,
