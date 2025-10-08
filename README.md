@@ -44,6 +44,12 @@ This repository contains implementations of fundamental data structures and algo
 
 > NOTE: Every major module now starts with an expanded in-file theory docstring covering: core definitions, invariants, complexity tables, trade-offs, pitfalls, implementation details, and selection guidance. Open the source to study deeper theory alongside code.
 
+## ⚡ Advanced Topics (Quick Links)
+
+- String Matching: [KMP and Rabin–Karp](#strings)
+- Disjoint Set Union: [Union-Find](#disjoint-set-union-union-find)
+- Indexing: [Suffix Array & LCP](#suffix-array--lcp)
+
 ## 🧭 Data Structure Selection Cheat Sheet
 
 | Goal / Need | Recommended Structure | Key Ops (Avg) | Why | Caveats |
