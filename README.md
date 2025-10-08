@@ -25,6 +25,8 @@ A comprehensive collection of Data Structures and Algorithms implemented in Pyth
   - [Backtracking](#backtracking)
   - [Bit Manipulation](#bit-manipulation)
   - [Mathematical Algorithms](#mathematical-algorithms)
+  - [Disjoint Set Union (Union-Find)](#disjoint-set-union-union-find)
+  - [Suffix Array & LCP](#suffix-array--lcp)
 - [Features](#features)
 - [Performance Analysis](#performance-analysis)
 - [Contributing](#contributing)
@@ -82,6 +84,8 @@ DSA-Python/
 │   ├── backtracking.py             # Backtracking (N-Queens, Sudoku)
 │   ├── bit_manipulation.py         # Bit hacks and utilities
 │   ├── math_algorithms.py          # Number theory & modular arithmetic
+│   ├── union_find.py               # Disjoint Set Union (Union-Find)
+│   ├── suffix_array.py             # Suffix Array + LCP (Kasai)
 │   ├── trees/
 │   │   ├── __init__.py             # Aggregated tree exports
 │   │   ├── binary_tree.py          # Generic binary tree traversals & utilities
@@ -792,7 +796,7 @@ m.sieve_of_eratosthenes(20)      # [2,3,5,7,11,13,17,19]
 **Featured Algorithms**:
 - Palindrome detection and longest palindromic substring
 - Anagram problems (detection, finding, grouping)
-- String search (naive and KMP algorithm)
+- String search (Naive, KMP, Rabin–Karp)
 - Edit distance (Levenshtein distance)
 - Minimum window substring
 - Longest common subsequence
@@ -826,6 +830,55 @@ algos.is_palindrome("A man a plan a canal Panama")  # True
 algos.are_anagrams("listen", "silent")  # True
 algos.edit_distance("kitten", "sitting")  # 3
 algos.min_window_substring("ADOBECODEBANC", "ABC")  # "BANC"
+
+# Substring search
+ops = StringOperations()
+ops.substring_search_kmp("ababcababa", "ababa")       # 5
+ops.substring_search_rabin_karp("abracadabra", "cada") # 4
+```
+
+### Disjoint Set Union (Union-Find)
+
+**File**: `DSA/union_find.py`
+
+Efficiently maintains a partition of elements into disjoint sets with near-constant time operations using path compression and union by rank.
+
+**What it covers**:
+- find(x): representative of x’s set (with path compression)
+- union(a, b): merge sets by rank; returns True if merged
+- connected(a, b): same-set check
+- component_size(x): size of x’s connected component
+
+**Sample Usage**:
+```python
+from DSA.union_find import UnionFind
+uf = UnionFind()
+for i in range(1, 6):
+  uf.add(i)
+uf.union(1, 2); uf.union(3, 4); uf.union(2, 3)
+uf.connected(1, 4)       # True
+uf.connected(1, 5)       # False
+uf.component_size(1)     # 4
+```
+
+### Suffix Array & LCP
+
+**File**: `DSA/suffix_array.py`
+
+Suffix array supports fast substring queries and pattern analysis.
+
+**What it covers**:
+- `build_suffix_array(s)`: O(n log n) doubling method
+- `build_lcp(s, sa)`: O(n) Kasai’s algorithm
+- `substring_search(s, sa, pattern)`: O(|pattern| log n) minimal index
+
+**Sample Usage**:
+```python
+from DSA.suffix_array import build_suffix_array, build_lcp, substring_search
+s = "banana"
+sa = build_suffix_array(s)             # [5, 3, 1, 0, 4, 2]
+lcp = build_lcp(s, sa)                 # [0, 1, 3, 0, 0, 2]
+substring_search(s, sa, "ana")        # 1
 ```
 
 ### Linked Lists
