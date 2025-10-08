@@ -224,6 +224,46 @@ class StringOperations:
             failure[i] = j
         
         return failure
+
+    def substring_search_rabin_karp(self, text: str, pattern: str, *, base: int = 256, mod: int = 1_000_000_007) -> int:
+        """
+        Rabin–Karp substring search using a rolling hash.
+
+        Returns the starting index of the first match, or -1 if not found.
+
+        Time Complexity: O(n + m) expected (with a good modulus), worst O(n m) on many hash collisions
+        Space Complexity: O(1)
+        """
+        n, m = len(text), len(pattern)
+        if m == 0:
+            return 0
+        if m > n:
+            return -1
+
+        # Precompute base^(m-1) % mod
+        hpow = 1
+        for _ in range(m - 1):
+            hpow = (hpow * base) % mod
+
+        # Initial hashes for pattern and first window
+        ph = 0  # pattern hash
+        wh = 0  # window hash
+        for i in range(m):
+            ph = (ph * base + ord(pattern[i])) % mod
+            wh = (wh * base + ord(text[i])) % mod
+
+        # Slide over text
+        for i in range(n - m + 1):
+            if ph == wh:
+                # Potential match, verify to avoid false positive due to collision
+                if text[i:i + m] == pattern:
+                    return i
+            if i < n - m:
+                # Remove left char, add right char
+                left = ord(text[i]) * hpow % mod
+                wh = (wh - left) % mod
+                wh = (wh * base + ord(text[i + m])) % mod
+        return -1
     
     # ==================== STRING MANIPULATION ====================
     

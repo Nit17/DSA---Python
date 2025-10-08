@@ -88,6 +88,10 @@ def test_strings():
         # Quick test
         result = operations.reverse_string("hello")
         assert result == "olleh", "String reverse failed"
+        # Rabin–Karp basic checks
+        text, pat = "abracadabra", "cada"
+        idx = operations.substring_search_rabin_karp(text, pat)
+        assert idx == 4, "Rabin–Karp failed to find correct index"
         print("✓ Strings module working")
         return True
     except Exception as e:
@@ -446,6 +450,24 @@ def test_graphs():
         print(f"✗ Graphs module failed: {e}")
         return False
 
+def test_suffix_array():
+    """Test suffix array and LCP construction + search"""
+    print("Testing Suffix Array module...")
+    try:
+        from suffix_array import build_suffix_array, build_lcp, substring_search
+        s = "banana"
+        sa = build_suffix_array(s)
+        lcp = build_lcp(s, sa)
+        # Known canonical SA/LCP for 'banana'
+        assert sa == [5, 3, 1, 0, 4, 2], f"SA incorrect: {sa}"
+        assert lcp == [0, 1, 3, 0, 0, 2], f"LCP incorrect: {lcp}"
+        assert substring_search(s, sa, "ana") == 1, "Suffix array search failed"
+        print("✓ Suffix Array module working")
+        return True
+    except Exception as e:
+        print(f"✗ Suffix Array module failed: {e}")
+        return False
+
 def test_bit_manipulation():
     """Test bit manipulation utilities"""
     print("Testing Bit Manipulation module...")
@@ -614,6 +636,7 @@ def main():
         test_hashing,
         test_trees,
         test_graphs,
+        test_suffix_array,
         test_backtracking,
         test_greedy,
         test_dp,
