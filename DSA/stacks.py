@@ -13,6 +13,7 @@ Array-backed (dynamic list): contiguous memory, great cache locality, direct
 indexing, occasional resize (amortized away). Pointer-based (linked) avoids
 resizing copies but adds per-node overhead and poorer locality—rarely faster in Python.
 
+
 Key Application Domains
 -----------------------
 1. Expression Handling: infix → postfix (Shunting Yard), evaluating RPN.
