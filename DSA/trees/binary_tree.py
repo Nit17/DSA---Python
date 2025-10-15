@@ -6,7 +6,6 @@ Definition:
 A Binary Tree is a hierarchical structure where each node has at most two children:
 left and right. It is the foundation for many specialized trees (BST, AVL, Heap, etc.).
 
-
 Key Concepts:
 - Depth: Number of edges from root to the node.
 - Height (of node): Longest downward path to a leaf. Height of tree = height(root).
